@@ -126,12 +126,88 @@ mainplot_data = reactive({
 
 })
 
-output$myplot = renderUI({
+# covariate plot
+covariate_data = reactive({
+  
+  if(is.null(input$selectedCovariates) || input$selectedCovariates == 'None') {
+    return(NULL)
+  }
+
+  # Extract input values. 
+  # I set these up here to make it clear which ones are used below, and also to avoid repetitive input$ calls.
+  palestine_or_israel = input$palestine_or_israel
+  selectedCovariates = input$selectedCovariates
+  graphPeriods = input$graphPeriods
+  
+  # Filter to original records, exclude rows added to represent additional locations within a single record.
+  d = dataPlot() %>% filter(Add == 0)
+
+  # Set up the periods.
+  d$X = if(graphPeriods == 'Annually') {
+    d$Year
+  } else if(graphPeriods == 'Monthly') {
+    paste0(d$Year, '_', pad0(d$MonthNum, 2))
+  } else if(graphPeriods == 'Quarterly') {
+    paste0(d$Year, '_', d$Quarter)
+  } else if(graphPeriods == 'Weekly') {
+    paste0(d$Year, '_', pad0(d$Week, 2))
+  } else {
+    stop(glue("mainplot_data: Unhanded case for graphPeriods: {graphPeriods}"))
+  }
+
+  # Calculate Goods.
+  d %<>% mutate(Goods = Total.Imports.Gaza.Israel / Total.Exports.Gaza.Israel)
+  d$Goods[is.infinite(d$Goods)] <- NA
+
+  # Calculate all the covariates.
+  d %<>% 
+    summarise(across(all_of(c(
+      'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
+      'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
+      'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
+      'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
+      'Goods'
+    )), mean, na.rm = TRUE), .by = X)
+
+  # Select Z and Y.
+  covariate_selection = list(
+    `Consumer Price Index` = list(Z = 'Israeli.CPI', Y = 'Palestinian.CPI'),
+    `Unemployment` = list(Z = 'Israeli.UE.Quarterly', Y = 'Palestinian.UE.Quarterly'),
+    `Trade Balance` = list(Z = 'Israeli.Trade.Balance', Y = 'Palestinian.Trade.Balance'),
+    `Exchange Rate` = list(Y = 'Exchange.Rate'),
+    `Home Demolitions by Israel` = list(Y = 'Demolished.Structures.Daily'),
+    `Stock Market Index` = list(Z = 'TA125.PX_CLOSE', Y = 'PASISI.PX_CLOSE'),
+    `Temperature` = list(Y = 'TAVG'),
+    `Rainfall` = list(Y = 'PRCP'),
+    `Israel-Gaza Crossing (People)` = list(Y = 'Total.Entries.Exits.Gaza.Israel'),
+    `Israel-Gaza Crossing (Goods)` = list(Y = 'Goods')
+  )[[selectedCovariates]]
+
+  # Return just the columns the user has selected.
+  get_cols = if(!is.null(covariate_selection$Z)){
+    c('X', covariate_selection$Y, covariate_selection$Z)
+  } else {
+    c('X', covariate_selection$Y)
+  } 
+
+  return(d[, get_cols])
+
+})
+
+output$lineplot = renderUI({
   
   req(mainplot_data())
   
   d = mainplot_data()
   cV = input$cV
+
+  # join covariate data.
+  if(!is.null(covariate_data())){
+    covariate_cols = setdiff(colnames(covariate_data()), "X")
+    d = left_join(d, covariate_data(), by = "X")
+  } else {
+    covariate_cols = c()
+  }
 
   x_title = c(
     `Annually` = 'Year',
@@ -145,7 +221,10 @@ output$myplot = renderUI({
     chart = list(type = 'line'),
     title = list(text = ''),
     yAxis = list(
-      title = list(text =  input$chooseData)
+      list(
+        title = list(text =  input$chooseData)
+      ),
+      list(title = list(enabled = FALSE), labels = list(enabled = FALSE))
     ),
     xAxis = list(
       title = list(text = x_title),
@@ -165,10 +244,13 @@ output$myplot = renderUI({
   for(col in setdiff(colnames(d), "X")){
     chart_options$series[[length(chart_options$series) + 1]] = list(
       name = col,
-      data = d[[col]]
+      data = d[[col]],
+      dashStyle = if(col %in% covariate_cols) "Dot" else "Solid",
+      yAxis = if(col %in% covariate_cols) 1 else 0
     )
   }
-    # Enable tooltips with custom format showing X and Y values with labels
+
+  # Enable tooltips with custom format showing X and Y values with labels
   chart_options = hc_enabletooltips(chart_options)
   chart_options$tooltip = list(
     pointFormat = '<b>{point.y}</b> {series.name}',
@@ -185,11 +267,9 @@ output$myplot = renderUI({
   )
   
   # Create the chart HTML with a div container
-  return(div(
-    id = "myplot",
-    style = "height: 400px; width: 100%;",
-    hc_html('myplot', chart_options)
-  ))
+  return(
+    hc_html('lineplot', chart_options)
+  )
 })
 
 

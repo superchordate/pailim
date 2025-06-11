@@ -55,16 +55,14 @@ ui = dashboardPage(
       tabItem(
         tabName = "Lines",
         div(
-          selectInput('graphPeriods','Graph Periods',choices=sort(c('Annually','Monthly','Quarterly','Weekly'))),          
+          selectInput('graphPeriods','Graph Periods',choices=sort(c('Annually','Monthly','Quarterly','Weekly'))),
           conditionalPanel(
             condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
             selectInput('cV','Color by',choices=NULL)
           ),
-          uiOutput("myplot", height = 400)
-        ),
-        br(),
-        selectInput('selectedCovariates', 'Add Covariate Graph', choices = NULL),
-        plotlyOutput("covariate_plot", height = 400)
+          selectInput('selectedCovariates', 'Add Covariates', choices = NULL),
+          uiOutput("lineplot", height = 400)
+        )
       )
     )
   )
