@@ -3,10 +3,9 @@ output$myplot1 = renderPlotly({
   
   req(input$palestine_or_israel)
   req(dataPlot())
-  print(dim(dataPlot()))
   req(input$graphPeriods)
   req(input$palestine_or_israel %in% c('Palestinian Actions','Israeli Actions', 'Both'))
-  req(input$p2!='None')
+  req(input$selectedCovariates!='None')
   
   d = dataPlot() %>% filter(Add==0)
   
@@ -29,49 +28,49 @@ output$myplot1 = renderPlotly({
   
   if(input$palestine_or_israel=='Palestinian Actions'){
     if(input$graphPeriods=='Annually'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Unemployment'){
+      } else if(input$selectedCovariates=='Unemployment'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
       }
     }
     else if(input$graphPeriods=='Monthly'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
         #d = d %>% group_by(Year,MonthNum) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -79,25 +78,25 @@ output$myplot1 = renderPlotly({
       }
     }
     else if(input$graphPeriods=='Quarterly'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Unemployment'){
+      } else if(input$selectedCovariates=='Unemployment'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -109,51 +108,51 @@ output$myplot1 = renderPlotly({
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T))
       
-      if(input$p2=='Exchange Rate'){
+      if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,Week) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Hamas-Fatah Reconciliation Talks') {
+      } else if(input$selectedCovariates=='Hamas-Fatah Reconciliation Talks') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(hamas_fatah_talks_ongoing,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Israeli Operation') {
+      } else if(input$selectedCovariates=='Israeli Operation') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(operation_ongoing,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='US-Israel State Visits') {
+      } else if(input$selectedCovariates=='US-Israel State Visits') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(israel_visit,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='UN Vote') {
+      } else if(input$selectedCovariates=='UN Vote') {
         d = d %>% mutate(un_vote = ifelse(unsc_vote==1 | unga_vote==1,1,0))
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(un_vote,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Israeli Coalition Size') {
+      } else if(input$selectedCovariates=='Israeli Coalition Size') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=round(mean(Coalition.Size,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
   } else if (input$palestine_or_israel=='Israeli Actions'){
     
     if(input$graphPeriods=='Annually'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Unemployment'){
+      } else if(input$selectedCovariates=='Unemployment'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -161,24 +160,24 @@ output$myplot1 = renderPlotly({
       }
     }
     else if(input$graphPeriods=='Monthly'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
         #d = d %>% group_by(Year,MonthNum) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -186,25 +185,25 @@ output$myplot1 = renderPlotly({
       }
     }
     else if(input$graphPeriods=='Quarterly'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Unemployment'){
+      } else if(input$selectedCovariates=='Unemployment'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -215,51 +214,51 @@ output$myplot1 = renderPlotly({
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T))
-      if(input$p2=='Exchange Rate'){
+      if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,Week) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Hamas-Fatah Reconciliation Talks') {
+      } else if(input$selectedCovariates=='Hamas-Fatah Reconciliation Talks') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(hamas_fatah_talks_ongoing,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Israeli Operation') {
+      } else if(input$selectedCovariates=='Israeli Operation') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(operation_ongoing,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='US-Israel State Visits') {
+      } else if(input$selectedCovariates=='US-Israel State Visits') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(israel_visit,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='UN Vote') {
+      } else if(input$selectedCovariates=='UN Vote') {
         d = d %>% mutate(un_vote = ifelse(unsc_vote==1 | unga_vote==1,1,0))
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(un_vote,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Israeli Coalition Size') {
+      } else if(input$selectedCovariates=='Israeli Coalition Size') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=round(mean(Coalition.Size,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
   } else if (input$palestine_or_israel=='Both'){
     
     if(input$graphPeriods=='Annually'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Unemployment'){
+      } else if(input$selectedCovariates=='Unemployment'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=Year)
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -267,24 +266,24 @@ output$myplot1 = renderPlotly({
       }
     }
     else if(input$graphPeriods=='Monthly'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
         #d = d %>% group_by(Year,MonthNum) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -292,25 +291,25 @@ output$myplot1 = renderPlotly({
       }
     }
     else if(input$graphPeriods=='Quarterly'){
-      if(input$p2=='Consumer Price Index'){
+      if(input$selectedCovariates=='Consumer Price Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Unemployment'){
+      } else if(input$selectedCovariates=='Unemployment'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Trade Balance'){
+      } else if(input$selectedCovariates=='Trade Balance'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Exchange Rate'){
+      } else if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Israel-Gaza Crossing (People)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (People)'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Total.Entries.Exits.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
-      } else if(input$p2=='Israel-Gaza Crossing (Goods)'){
+      } else if(input$selectedCovariates=='Israel-Gaza Crossing (Goods)'){
         d = d %>% mutate(Goods = Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel)
         d$Goods[is.infinite(d$Goods)]=NA
         d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
@@ -321,26 +320,26 @@ output$myplot1 = renderPlotly({
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T))
-      if(input$p2=='Exchange Rate'){
+      if(input$selectedCovariates=='Exchange Rate'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(Exchange.Rate,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Home Demolitions by Israel'){
+      } else if(input$selectedCovariates=='Home Demolitions by Israel'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(Demolished.Structures.Daily,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Stock Market Index'){
+      } else if(input$selectedCovariates=='Stock Market Index'){
         d = d %>% group_by(Year,Week) %>% summarise(Z=mean(TA125.PX_CLOSE,na.rm=T),Y=mean(PASISI.PX_CLOSE,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Temperature'){
+      } else if(input$selectedCovariates=='Temperature'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(TAVG,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Rainfall'){
+      } else if(input$selectedCovariates=='Rainfall'){
         d = d %>% group_by(Year,Week) %>% summarise(Y=mean(PRCP,na.rm=T)) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Hamas-Fatah Reconciliation Talks') {
+      } else if(input$selectedCovariates=='Hamas-Fatah Reconciliation Talks') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(hamas_fatah_talks_ongoing,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Israeli Operation') {
+      } else if(input$selectedCovariates=='Israeli Operation') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(operation_ongoing,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='US-Israel State Visits') {
+      } else if(input$selectedCovariates=='US-Israel State Visits') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(israel_visit,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='UN Vote') {
+      } else if(input$selectedCovariates=='UN Vote') {
         d = d %>% mutate(un_vote = ifelse(unsc_vote==1 | unga_vote==1,1,0))
         d = d %>% group_by(Year,Week) %>% summarise(Y=ceiling(mean(un_vote,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
-      } else if(input$p2=='Israeli Coalition Size') {
+      } else if(input$selectedCovariates=='Israeli Coalition Size') {
         d = d %>% group_by(Year,Week) %>% summarise(Y=round(mean(Coalition.Size,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
@@ -364,7 +363,7 @@ output$myplot1 = renderPlotly({
       theme_classic() -> p
   }
   
-  ylabel = labtab$label[labtab$cov_type==input$p2]
+  ylabel = labtab$label[labtab$cov_type==input$selectedCovariates]
   
   p = p + ylab(ylabel)
   

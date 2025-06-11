@@ -60,7 +60,7 @@ ui = dashboardPage(
           plotlyOutput("myplot",height=400)
         ),
         br(),
-        uiOutput("p2"),
+        uiOutput("selectedCovariates"),
         plotlyOutput("myplot1",height=400)
       )
     )

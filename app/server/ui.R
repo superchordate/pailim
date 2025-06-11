@@ -86,15 +86,15 @@ observeEvent(
       updated_choices = 'None'
     }
     
-    updateSelectInput(session,'p2',
+    updateSelectInput(session,'selectedCovariates',
                       choices=updated_choices,
                       selected='None')
   })
 
-# p2 is the dropdown for covariate graph, only available when action is not 'Both'
-output$p2 = renderUI({
+# selectedCovariates is the dropdown for covariate graph, only available when action is not 'Both'
+output$selectedCovariates = renderUI({
   req(input$palestine_or_israel=='Both' | input$palestine_or_israel=='Palestinian Actions' | input$palestine_or_israel=='Israeli Actions')
-  selectInput('p2','Add Covariate Graph',choices=NULL)
+  selectInput('selectedCovariates','Add Covariate Graph',choices=NULL)
 })
 
 # general dropdowns on sidebar

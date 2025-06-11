@@ -11,6 +11,8 @@ mainplot_data = reactive({
   req(dataPlot())
   req(input$cV)
 
+  # Extract input values. 
+  # I set these up here to make it clear which ones are used below, and also to avoid repetitive input$ calls.
   cV = input$cV
   chooseData = input$chooseData
   casualtyType = input$casualtyType
@@ -19,13 +21,13 @@ mainplot_data = reactive({
   riot.sub = input$riot.sub
   primary.violence = input$primary.violence
   
-  # filter to original records, exlude rows added to represent additional locations within a single record.
+  # Filter to original records, exlude rows added to represent additional locations within a single record.
   d = dataPlot() %>% filter(Add == 0)
 
-  # add Events count (just 1 per row).
+  # Add Events count (just 1 per row).
   d$Events = 1
 
-  # set up the periods.
+  # Set up the periods.
   d$X = if(graphPeriods == 'Annually') {
     d$Year
   } else if(graphPeriods == 'Monthly') {
@@ -82,7 +84,7 @@ mainplot_data = reactive({
     c('X', cV)
   }
 
-  # apply data transformations.
+  # Apply data transformations.
   if(cV=='Type.Violence'){
     
     d %<>% select(
@@ -112,7 +114,7 @@ mainplot_data = reactive({
 
   }
 
-  # apply grouping and summing. 
+  # Apply grouping and summing. 
   d %<>% 
     group_by(across(all_of(group_cols))) %>% 
     summarise(across(all_of(sum_cols), sum, na.rm = TRUE), .groups = 'drop')
@@ -121,7 +123,6 @@ mainplot_data = reactive({
 
 })
 
-# main line plot
 myplot = reactive({
 
   req(mainplot_data())
@@ -180,8 +181,6 @@ myplot = reactive({
   } else {
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_0', 1))
   }
-
-  
   
   p = p + scale_y_continuous(breaks = function(x) unique(floor(pretty(seq(0, (max(x) + 1) * 1.1)))))
 
