@@ -1,3 +1,5 @@
 *.RData
 *.csv
 secrets
+raw-data/
+cache/
