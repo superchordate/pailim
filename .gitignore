@@ -3,3 +3,4 @@
 secrets
 raw-data/
 cache/
+*.zip
