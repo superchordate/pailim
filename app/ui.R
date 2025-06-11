@@ -38,12 +38,31 @@ ui = dashboardPage(
       )
     )  ),
   dashboardBody(
+
+    # Javascript imports. 
     tags$head(
       tags$script(src = "highcharts.js"),
       tags$script(src = "highcharts-defaults.js")
     ),
-    downloadButton('download','Get Data'),
-    downloadButton('download_1','Get Codebook'),
+
+    # Downloads.
+    tags$a(
+      href = "https://storage.googleapis.com/pailim-public/Codebook.pdf", 
+      target = "_blank", 
+      class = "btn btn-default", 
+      icon("file-pdf"), 
+      "Get Codebook"
+    ),
+    tags$a(
+      href = "https://storage.googleapis.com/pailim-public/pailim-data.zip", 
+      target = "_blank", 
+      class = "btn btn-default", 
+      icon("download"), 
+      "Get Data"
+    ),
+
+    # Main content
+    br(), br(),
     p("Note: List below map contains up to 100 observations from selected geographic area."),
     tabItems(
       tabItem(
