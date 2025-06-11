@@ -9,7 +9,7 @@ RUN apt-get update && \
     # crcmod for faster downloads:
     # python3 -m pip install --no-cache-dir -U crcmod
 
-RUN Rscript -e 'install.packages(c("glue", "shinyjs", "data.table", "leaflet", "dplyr", "shinycssloaders", "shiny", "shinydashboard", "shinyWidgets", "DT", "plotly", "scales", "qs2", "stringr", "magrittr"))'
+RUN Rscript -e 'install.packages(c("easyr", "tidyr", "glue", "shinyjs", "data.table", "leaflet", "dplyr", "shinycssloaders", "shiny", "shinydashboard", "shinyWidgets", "DT", "plotly", "scales", "qs2", "stringr", "magrittr", "easyr"))'
 
 EXPOSE 3838
 

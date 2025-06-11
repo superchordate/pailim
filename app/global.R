@@ -1,5 +1,4 @@
-#setwd("/Users/amaancharaniya/Desktop/pailim_app_final1")
-
+require(tidyr)
 require(glue)
 require(shinyjs)
 require(data.table)
@@ -15,6 +14,7 @@ require(scales)
 require(qs2)
 require(stringr)
 require(magrittr)
+require(easyr)
 
 # load data for shiny
 load('data.RData')
