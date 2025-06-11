@@ -13,5 +13,10 @@ begin()
 
 runfolder("scripts")
 
-save(list = c('pa', 'il', 'cm'), file = '../app/data.RData')
- 
+# object the app can use. 
+options = list(
+    Year = sort(unique(cm$Year)),
+    Combined_Crimes = sort(unique(trimws(unlist(strsplit(unique(il$Combined_Crimes), ";")))))
+)
+
+save(list = c('pa', 'il', 'cm', 'options'), file = '../app/data.RData')

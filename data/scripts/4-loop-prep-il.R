@@ -1,10 +1,11 @@
 if (!cache.ok(4)) {
+
+  # some fixes to match prior format.
+  il %<>% rename(City = District)
   
   # for each record, for each additional location, we create a new row setting the additional x/y as X.1, Y.1.
-  tmp2 <- list()  
-  extra_xy = unique(as.numeric(gsub("X\\.", "", grep("X\\.", colnames(il), value = TRUE))))
-  extra_xy = setdiff(extra_xy, 1) # remove the first one, which is already X.1, Y.1 and has been captured elsewhere.
-  for(i in extra_xy){
+  tmp2 <- list()
+  for(i in 2:6){
     
     idt = il %>% 
       
@@ -17,6 +18,13 @@ if (!cache.ok(4)) {
       mutate(
         Add = 1 # indicate this record has been added.
       )
+
+      # Convert to numeric.
+      # There is a X.5 value "Battir" which is a string, so we suppress warnings. We want this to be NA and get filtered out.
+      idt$X.1 = suppressWarnings(as.numeric(idt$X.1))
+      idt$Y.1 = suppressWarnings(as.numeric(idt$Y.1))
+
+    if(all(is.na(idt$X.1))) next
     
     # add this data to the running list. 
     tmp2[[i]] <- bind_cols(
