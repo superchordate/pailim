@@ -67,20 +67,21 @@ observeEvent(
     
     if(input$palestine_or_israel=='Both' | input$palestine_or_israel=='Palestinian Actions' | input$palestine_or_israel=='Israeli Actions'){
       if(input$graphPeriods=='Annually'){
-        updated_choices = sort(c('None','Consumer Price Index','Unemployment','Trade Balance','Exchange Rate',
-                                  'Home Demolitions by Israel','Rainfall','Stock Market Index',"Temperature",
-                                  'Israel-Gaza Crossing (People)','Israel-Gaza Crossing (Goods)'))
-      } else if (input$graphPeriods=='Quarterly'){
-        updated_choices = sort(c('None','Consumer Price Index','Unemployment','Trade Balance','Exchange Rate',
-                                  'Home Demolitions by Israel','Rainfall','Stock Market Index',"Temperature",
-                                  'Israel-Gaza Crossing (People)','Israel-Gaza Crossing (Goods)'))
-      } else if (input$graphPeriods=='Monthly'){
-        updated_choices = sort(c('None','Consumer Price Index','Trade Balance','Exchange Rate','Home Demolitions by Israel',
-                                  'Rainfall','Stock Market Index',"Temperature",'Israel-Gaza Crossing (People)','Israel-Gaza Crossing (Goods)'))
-      } else if (input$graphPeriods=='Weekly'){
-        updated_choices = sort(c('None','Exchange Rate','Home Demolitions by Israel','Rainfall','Stock Market Index',"Temperature",
-                                  'Hamas-Fatah Reconciliation Talks','Israeli Operation','US-Israel State Visits',
-                                  'UN Vote','Israeli Coalition Size'))
+        updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
+                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
+                          'Stock Market Index','Temperature','Trade Balance','Unemployment')
+            } else if (input$graphPeriods=='Quarterly'){
+            updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
+                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
+                          'Stock Market Index','Temperature','Trade Balance','Unemployment')
+            } else if (input$graphPeriods=='Monthly'){
+            updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
+                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
+                          'Stock Market Index','Temperature','Trade Balance')
+            } else if (input$graphPeriods=='Weekly'){
+            updated_choices = c('None','Exchange Rate','Hamas-Fatah Reconciliation Talks','Home Demolitions by Israel',
+                          'Israeli Coalition Size','Israeli Operation','Rainfall','Stock Market Index',
+                          'Temperature','UN Vote','US-Israel State Visits')
       }
     } else if (input$palestine_or_israel=='Both') {
       updated_choices = 'None'
@@ -90,12 +91,6 @@ observeEvent(
                       choices=updated_choices,
                       selected='None')
   })
-
-# selectedCovariates is the dropdown for covariate graph, only available when action is not 'Both'
-output$selectedCovariates = renderUI({
-  req(input$palestine_or_israel=='Both' | input$palestine_or_israel=='Palestinian Actions' | input$palestine_or_israel=='Israeli Actions')
-  selectInput('selectedCovariates','Add Covariate Graph',choices=NULL)
-})
 
 # general dropdowns on sidebar
 output$dynamic_inputs = renderUI({

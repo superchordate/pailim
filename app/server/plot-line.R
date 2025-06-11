@@ -21,7 +21,7 @@ mainplot_data = reactive({
   riot.sub = input$riot.sub
   primary.violence = input$primary.violence
   
-  # Filter to original records, exlude rows added to represent additional locations within a single record.
+  # Filter to original records, exclude rows added to represent additional locations within a single record.
   d = dataPlot() %>% filter(Add == 0)
 
   # Add Events count (just 1 per row).

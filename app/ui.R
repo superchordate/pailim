@@ -57,11 +57,11 @@ ui = dashboardPage(
             condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
             selectInput('cV','Color by',choices=NULL)
           ),
-          plotlyOutput("myplot",height=400)
+          plotlyOutput("myplot", height = 400)
         ),
         br(),
-        uiOutput("selectedCovariates"),
-        plotlyOutput("myplot1",height=400)
+        selectInput('selectedCovariates', 'Add Covariate Graph', choices = NULL),
+        plotlyOutput("covariate_plot", height = 400)
       )
     )
   )
