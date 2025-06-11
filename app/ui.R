@@ -63,7 +63,6 @@ ui = dashboardPage(
 
     # Main content
     br(), br(),
-    p("Note: List below map contains up to 100 observations from selected geographic area."),
     tabItems(
       tabItem(
         tabName = "Maps",
