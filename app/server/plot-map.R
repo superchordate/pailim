@@ -80,16 +80,21 @@ output$mymap = renderLeaflet({
   }
   
   else if(input$chooseData=='Riots'){
-    d = d %>% filter(Type.Violence=='Riot'|Secondary.Type.Violence.2=='Riot') %>% 
-      filter(Riot.SubCategory %in% input$riot.sub)
+
+    d %>% filter(
+      str_detect(d$Combined_Crimes, "\\bRiot\\b"),
+      Riot.SubCategory %in% input$riot.sub
+    )
+
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% addMarkers(
       lng=~Longitude,lat=~Latitude,
       icon = ~countries[`Palestine/Israel`],
       #popup = ~as.character(Balloon.Number), label = ~as.character(Balloon.Number),
       clusterOptions = markerClusterOptions()
     ) -> p
+    
   }
-  
+
   p %>% setView(lng = 34.7818, lat = 32.0853, zoom = 7) # set the center of the map
 })
 

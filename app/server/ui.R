@@ -31,11 +31,11 @@ observeEvent(
     print(input$casualtyType)
     
     if(input$palestine_or_israel=='Both'){
-      color_choices = c('None','Palestine/Israel', 'Type.Violence')
+      color_choices = c('None','Palestine/Israel', 'Combined_Crimes')
     } else if (input$palestine_or_israel=='Palestinian Actions'){
-      color_choices = c('None','Type.Violence', 'Perpetrator.Origin','Region')
+      color_choices = c('None','Combined_Crimes', 'Perpetrator.Origin','Region')
     } else if (input$palestine_or_israel=='Israeli Actions'){
-      color_choices = c('None','Type.Violence', 'Perpetrator.Type','City')
+      color_choices = c('None','Combined_Crimes', 'Perpetrator.Type','City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){
@@ -115,14 +115,12 @@ output$dynamic_inputs = renderUI({
     ),
     
     
-    conditionalPanel(
-      condition="input.chooseData=='Events'|input.chooseData=='Casualties'",
-      pickerInput('primary.violence','Select Primary Violence Type',choices=sort(na.omit(unique(d()$Type.Violence))),selected=na.omit(unique(d()$Type.Violence)),multiple=TRUE,
-                  options = list(
-                    `actions-box` = TRUE,
-                    `deselect-all-text` = "None",
-                    `select-all-text` = "All"
-                  )),
+        pickerInput('Combined_Crimes','Combined Crimes',choices=options$Combined_Crimes,selected=options$Combined_Crimes,multiple=TRUE,
+                    options = list(
+                      `actions-box` = TRUE,
+                      `deselect-all-text` = "None",
+                      `select-all-text` = "All"
+                    )),
 
        # Inputs specific to Israeli data.
       conditionalPanel(
@@ -134,12 +132,6 @@ output$dynamic_inputs = renderUI({
                       `select-all-text` = "All"
                     )),
         pickerInput('gover','Governorate',choices=sort(na.omit(unique(d()$City))),selected=na.omit(unique(d()$City)),multiple=TRUE,
-                    options = list(
-                      `actions-box` = TRUE,
-                      `deselect-all-text` = "None",
-                      `select-all-text` = "All"
-                    )),
-        pickerInput('Combined_Crimes','Combined Crimes',choices=options$Combined_Crimes,selected=options$Combined_Crimes,multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
                       `deselect-all-text` = "None",
@@ -166,7 +158,6 @@ output$dynamic_inputs = renderUI({
       ),
       
     )
-  )
 })
 
 

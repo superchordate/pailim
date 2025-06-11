@@ -1,7 +1,7 @@
 if (!cache.ok(3)) {
     
-    tmp <- list()
-    
+    # Create extra rows for multi-action events. 
+    tmp <- list()    
     for (i in 1:nrow(pa)) {
         d <- pa[i, ]
         stmp <- list()
@@ -40,6 +40,18 @@ if (!cache.ok(3)) {
         distinct()
     
     pa <- bind_rows(pa, tmp)
+
+    # Create Combined Crimes column to match il.
+    combine_cols = grep("iolence", colnames(pa), value = TRUE)
+    
+    # Combine these columns into a ;-separated list. 
+    pa <- pa %>%
+        mutate(
+            Combined_Crimes = apply(select(., all_of(combine_cols)), 1, function(x) {
+                paste(x[!is.na(x)], collapse = ";")
+            })
+        ) %>%
+        mutate(Combined_Crimes = ifelse(Combined_Crimes == "", NA, Combined_Crimes))
     
     save.cache(il, pa)
 }

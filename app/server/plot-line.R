@@ -20,6 +20,7 @@ mainplot_data = reactive({
 
   # Add Events count (just 1 per row).
   d$Events = 1
+  d$Riots = str_detect(d$Combined_Crimes, "\\bRiot\\b") * 1
 
   # Set up the periods.
   d$X = if(graphPeriods == 'Annually') {
@@ -63,49 +64,48 @@ mainplot_data = reactive({
     } else if(chooseData == 'Incendiary Balloons') {
       c("Balloon.Number")
     } else if(chooseData == 'Riots') {
-      c("Events") # Riots are counted via filtering instead of summing.
+      c("Riots")
     }
   }
 
-  if(is.null(sum_cols)) stop(glue("
-    mainplot_data: Unhanded case for chooseData: {chooseData}; palestine_or_israel: {palestine_or_israel}
-  "))
+  # Special handling for Combined Crimes.
+  if(cV=='Combined_Crimes'){
 
-  # Identify columns we'll be grouping by.
-  group_cols = if(cV %in% c('None', 'Casualty Type')) {
-    c('X')
+    # Loop over each input$Combined_Crimes selection and create a metric column that can be used later for plotting.
+    for(crime in input$Combined_Crimes){
+
+      # Add a column we can sum to count actions. 
+      d[[crime]] = str_detect(d$Combined_Crimes, paste0("\\b", crime, "\\b")) * d[[sum_cols[1]]]
+
+      # Capture this as a column we need to sum in the upcoming group and sum operation.
+      sum_cols = c(sum_cols, crime)
+
+    }
+
+    # Since we have set up all our numeric columns, we only need to group by X.
+    group_cols = c("X")    
+    sum_cols = sum_cols[-1]  # Remove the first element, which is the original sum_cols (e.g., Casualties, Events, etc.)
+
   } else {
-    c('X', cV)
-  }
 
-  # Apply data transformations.
-  if(cV=='Type.Violence'){
-    
-    d %<>% select(
-      X,
-      contains('Type.Violence'),
-      contains("Casualties"),
-      contains("Killed"),
-      contains("Injured"),
-      contains("Events"),
-      contains("Detained.Arrested"),
-      contains("Rocket.Number"),
-      contains("Balloon.Number"),
-      contains("Riot.SubCategory")
-    )
+    if(is.null(sum_cols)) stop(glue("
+      mainplot_data: Unhanded case for chooseData: {chooseData}; palestine_or_israel: {palestine_or_israel}
+    "))
 
-    d %<>% pivot_longer(cols = contains('Type.Violence'), values_to = 'Type.Violence', values_drop_na = TRUE)
-
-    d %<>% filter(Type.Violence %in% primary.violence)
+    # Identify columns we'll be grouping by.
+    group_cols = if(cV %in% c('None', 'Casualty Type')) {
+      c('X')
+    } else {
+      c('X', cV)
+    }
 
   }
 
   if(chooseData=='Riots' & palestine_or_israel=='Palestinian Actions'){    
     d %<>% filter(
-      Type.Violence=='Riot' | Secondary.Type.Violence.2=='Riot',
+      str_detect(d$Combined_Crimes, "\\bRiot\\b"),
       Riot.SubCategory %in% riot.sub
     )
-
   }
 
   # Apply grouping and summing. 
@@ -222,7 +222,7 @@ output$lineplot = renderUI({
     title = list(text = ''),
     yAxis = list(
       list(
-        title = list(text =  input$chooseData)
+        title = list(text = input$chooseData)
       ),
       list(title = list(enabled = FALSE), labels = list(enabled = FALSE))
     ),
