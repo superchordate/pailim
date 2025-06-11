@@ -28,10 +28,10 @@ mainplot_data = reactive({
     d = d %>% pivot_longer(cols=contains('Type.Violence'),values_to='Type.Violence',values_drop_na = TRUE)
     d = d %>% filter(Type.Violence %in% input$primary.violence)
   }  
-  print(glue("graphPeriods: {input$graphPeriods}"))
+  
   if(input$chooseData=='Casualties'){
     
-    if(input$casualtype=='All') {
+    if(input$casualtyType=='All') {
       
       if(cV=='None'){
         if(input$graphPeriods=='Annually'){
@@ -81,7 +81,7 @@ mainplot_data = reactive({
         }
       }
     }
-    else if(input$casualtype=='Killed') {
+    else if(input$casualtyType=='Killed') {
       
       if(cV=='None'){
         if(input$graphPeriods=='Annually'){
@@ -111,7 +111,7 @@ mainplot_data = reactive({
         }
       }
     }
-    else if(input$casualtype=='Injured') {
+    else if(input$casualtyType=='Injured') {
       
       if(cV=='None'){
         if(input$graphPeriods=='Annually'){

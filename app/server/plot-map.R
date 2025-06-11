@@ -15,7 +15,7 @@ output$mymap = renderLeaflet({
                   clusterOptions = markerClusterOptions()) -> p
   }
   
-  else if(input$chooseData=='Casualties' & input$casualtype=='All'){
+  else if(input$chooseData=='Casualties' & input$casualtyType=='All'){
     d = d %>% filter(Casualties>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
@@ -27,7 +27,7 @@ output$mymap = renderLeaflet({
     
   }
   
-  else if(input$chooseData=='Casualties' & input$casualtype=='Killed'){
+  else if(input$chooseData=='Casualties' & input$casualtyType=='Killed'){
     d = d %>% filter(Killed>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
@@ -38,7 +38,7 @@ output$mymap = renderLeaflet({
       ) -> p
   }
   
-  else if(input$chooseData=='Casualties' & input$casualtype=='Injured'){
+  else if(input$chooseData=='Casualties' & input$casualtyType=='Injured'){
     d = d %>% filter(Injured>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(

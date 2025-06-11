@@ -24,11 +24,11 @@ observeEvent(
   {
     input$tab
     input$chooseData
-    input$casualtype
+    input$casualtyType
   },{
     
     print(input$chooseData)
-    print(input$casualtype)
+    print(input$casualtyType)
     
     if(input$palestine_or_israel=='Both'){
       color_choices = c('None','palestine_or_israel','Type.Violence')
@@ -38,7 +38,7 @@ observeEvent(
       color_choices = c('None','Type.Violence','Perpetrator.Type','City')
     }
     
-    if(input$chooseData=='Casualties'& input$casualtype=='All'){
+    if(input$chooseData=='Casualties'& input$casualtyType=='All'){
       color_choices=c(color_choices,'Casualty Type')
     } else {
       color_choices
@@ -115,7 +115,7 @@ output$dynamic_inputs = renderUI({
     ),
     conditionalPanel(
       condition="input.chooseData=='Casualties'",
-      pickerInput('casualtype','Casualty Subcategories',choices=sort(c('All','Killed','Injured')),selected='All',multiple=FALSE#,
+      pickerInput('casualtyType','Casualty Subcategories',choices=sort(c('All','Killed','Injured')),selected='All',multiple=FALSE#,
       )
     ),
     
