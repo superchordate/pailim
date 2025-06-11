@@ -10,7 +10,7 @@ output$mymap = renderLeaflet({
   if(input$chooseData=='Events'){
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(lng=~Longitude,lat=~Latitude,
-                  icon = ~countries[datatype],
+                  icon = ~countries[`Palestine/Israel`],
                   #popup = ~as.character(Verbatim.Report), label = ~as.character(Verbatim.Report),
                   clusterOptions = markerClusterOptions()) -> p
   }
@@ -20,7 +20,7 @@ output$mymap = renderLeaflet({
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
         lng=~Longitude,lat=~Latitude,
-        icon = ~countries[datatype],
+        icon = ~countries[`Palestine/Israel`],
         #popup = ~as.character(Casualties), label = ~as.character(Casualties),
         clusterOptions = markerClusterOptions()
       ) -> p
@@ -32,7 +32,7 @@ output$mymap = renderLeaflet({
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
         lng=~Longitude,lat=~Latitude,
-        icon = ~countries[datatype],
+        icon = ~countries[`Palestine/Israel`],
         popup = ~as.character(Killed), label = ~as.character(Killed),
         clusterOptions = markerClusterOptions()
       ) -> p
@@ -43,7 +43,7 @@ output$mymap = renderLeaflet({
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
         lng=~Longitude,lat=~Latitude,
-        icon = ~countries[datatype],
+        icon = ~countries[`Palestine/Israel`],
         popup = ~as.character(Injured), label = ~as.character(Injured),
         clusterOptions = markerClusterOptions()
       ) -> p
@@ -53,7 +53,7 @@ output$mymap = renderLeaflet({
     d = d %>% filter(Detained.Arrested>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% addMarkers(
       lng=~Longitude,lat=~Latitude,
-      icon = ~countries[datatype],
+      icon = ~countries[`Palestine/Israel`],
       popup = ~as.character(Detained.Arrested), label = ~as.character(Detained.Arrested),
       clusterOptions = markerClusterOptions()
     ) -> p
@@ -63,7 +63,7 @@ output$mymap = renderLeaflet({
     d = d %>% filter(Rocket.Number>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
       lng=~Longitude,lat=~Latitude,
-      icon = ~countries[datatype],
+      icon = ~countries[`Palestine/Israel`],
       popup = ~as.character(Rocket.Number), label = ~as.character(Rocket.Number),
       clusterOptions = markerClusterOptions()
     ) -> p
@@ -73,7 +73,7 @@ output$mymap = renderLeaflet({
     d = d %>% filter(Balloon.Number>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
       lng=~Longitude,lat=~Latitude,
-      icon = ~countries[datatype],
+      icon = ~countries[`Palestine/Israel`],
       popup = ~as.character(Balloon.Number), label = ~as.character(Balloon.Number),
       clusterOptions = markerClusterOptions()
     ) -> p
@@ -84,7 +84,7 @@ output$mymap = renderLeaflet({
       filter(Riot.SubCategory %in% input$riot.sub)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% addMarkers(
       lng=~Longitude,lat=~Latitude,
-      icon = ~countries[datatype],
+      icon = ~countries[`Palestine/Israel`],
       #popup = ~as.character(Balloon.Number), label = ~as.character(Balloon.Number),
       clusterOptions = markerClusterOptions()
     ) -> p

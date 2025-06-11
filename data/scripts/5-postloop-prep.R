@@ -4,7 +4,7 @@ if(!cache.ok(5)){
     # ===== PALESTINE DATA PREPARATION =====
     pa %<>% 
         mutate(
-            datatype = 'Palestine',
+            `Palestine/Israel` = 'Palestine',
             Month = factor(Month, levels = 1:12, labels = month.abb),
             Perpetrator.Origin = fifelse(
                 !is.na(Perpetrator.Origin.2) | !is.na(Perpetrator.Origin.3),
@@ -45,7 +45,7 @@ if(!cache.ok(5)){
     il %<>%
         mutate(
             Month = factor(Month, levels = 1:12, labels = month.abb),
-            datatype = 'Israel',
+            `Palestine/Israel` = 'Israel',
             Perpetrator.Type = fifelse(!is.na(Perpetrator.2), 'Multiple Perpetrators', Perpetrator.1),
             Victim.Type = fifelse(
                 !is.na(Victim.2) | !is.na(Victim.3) | !is.na(Victim.4),
@@ -89,16 +89,16 @@ if(!cache.ok(5)){
     cm = bind_rows(
         pa %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report,Type.Violence,Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
-            TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel,Victim.Type,datatype,
+            TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel,Victim.Type,`Palestine/Israel`,
             starts_with('Secondary.Type.Violence')
         ),
         il %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report,Type.Violence, Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
-            TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel, Victim.Type,datatype,
+            TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel, Victim.Type,`Palestine/Israel`,
             starts_with('Secondary.Type.Violence')
         )
     )
-    cm$datatype = factor(cm$datatype)
+    cm$`Palestine/Israel` = factor(cm$`Palestine/Israel`)
 
     # ===== FILTER DATA =====
     # Start from 2010 and remove empty cities for Israel data

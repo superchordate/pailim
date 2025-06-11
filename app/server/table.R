@@ -13,7 +13,7 @@ vertab = reactive({
   
   bounds = input$mymap_bounds
   d = dataPlot()
-  d = d %>% select(Year,Month,Type=datatype,Description=Verbatim.Report,Longitude,Latitude) %>% 
+  d = d %>% select(Year,Month,Type=`Palestine/Israel`,Description=Verbatim.Report,Longitude,Latitude) %>% 
     mutate(Type = ifelse(Type=='Palestine','Palestinian Actions','Israeli Actions')) %>% 
     filter(Latitude <= bounds$north,Latitude >= bounds$south,Longitude <= bounds$east,Longitude >= bounds$west) %>%
     select(-Longitude,-Latitude)

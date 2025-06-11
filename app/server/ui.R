@@ -31,11 +31,11 @@ observeEvent(
     print(input$casualtyType)
     
     if(input$palestine_or_israel=='Both'){
-      color_choices = c('None','palestine_or_israel','Type.Violence')
+      color_choices = c('None','Palestine/Israel', 'Type.Violence')
     } else if (input$palestine_or_israel=='Palestinian Actions'){
-      color_choices = c('None','Type.Violence','Perpetrator.Origin','Region')
+      color_choices = c('None','Type.Violence', 'Perpetrator.Origin','Region')
     } else if (input$palestine_or_israel=='Israeli Actions'){
-      color_choices = c('None','Type.Violence','Perpetrator.Type','City')
+      color_choices = c('None','Type.Violence', 'Perpetrator.Type','City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){
