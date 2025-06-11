@@ -1,0 +1,1 @@
+Rscript -e "shiny::runApp('../prior-app/app', port=8080)"
