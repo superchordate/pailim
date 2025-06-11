@@ -36,9 +36,12 @@ ui = dashboardPage(
         uiOutput('dynamic_inputs'),
         actionButton("resetAll", "Reset")
       )
-    )
-  ),
+    )  ),
   dashboardBody(
+    tags$head(
+      tags$script(src = "highcharts.js"),
+      tags$script(src = "highcharts-defaults.js")
+    ),
     downloadButton('download','Get Data'),
     downloadButton('download_1','Get Codebook'),
     p("Note: List below map contains up to 100 observations from selected geographic area."),
@@ -57,7 +60,7 @@ ui = dashboardPage(
             condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
             selectInput('cV','Color by',choices=NULL)
           ),
-          plotlyOutput("myplot", height = 400)
+          uiOutput("myplot", height = 400)
         ),
         br(),
         selectInput('selectedCovariates', 'Add Covariate Graph', choices = NULL),

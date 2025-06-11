@@ -1,9 +1,3 @@
-output$myplot = renderPlotly({
-  req(myplot())
-  p = myplot()
-  ggplotly(p=p) %>% config(displayModeBar = F)  
-})
-
 mainplot_data = reactive({
 
   req(input$palestine_or_israel)
@@ -119,73 +113,83 @@ mainplot_data = reactive({
     group_by(across(all_of(group_cols))) %>% 
     summarise(across(all_of(sum_cols), sum, na.rm = TRUE), .groups = 'drop')
 
+  # Pivot wider on group columns that are not X, to prep these for plotting.
+  if(length(setdiff(group_cols, 'X')) > 0){
+    d %<>% pivot_wider(
+      names_from = setdiff(group_cols, 'X'),
+      values_from = all_of(sum_cols),
+      values_fill = 0
+    )
+  }
+
   return(d)
 
 })
 
-myplot = reactive({
-
+output$myplot = renderUI({
+  
   req(mainplot_data())
-
+  
   d = mainplot_data()
   cV = input$cV
+
+  x_title = c(
+    `Annually` = 'Year',
+    `Monthly` = 'Year_Month',
+    `Quarterly` = 'Year_Quarter',
+    `Weekly` = 'Year_Week'
+  )[[input$graphPeriods]]
   
-  # Set the X axis to be a factor with levels in the order they appear in the data.
-  # Not necessary for Annual since Year orders properly. 
-  if(input$graphPeriods != 'Annually'){
-    d %<>% ungroup() %>% mutate(X = factor(X, levels = unique(d$X)))
+  # Base options for Highcharts
+  chart_options = list(
+    chart = list(type = 'line'),
+    title = list(text = ''),
+    yAxis = list(
+      title = list(text =  input$chooseData)
+    ),
+    xAxis = list(
+      title = list(text = x_title),
+      type = "categorical",
+      categories = d$X
+    ),
+    plotOptions = list(
+      line = list(
+        dataLabels = list(enabled = FALSE)
+      )
+    ),
+    series = list()
+  )
+  
+  # Add the applicable series. This will include everything that is not X. 
+  series = list()
+  for(col in setdiff(colnames(d), "X")){
+    chart_options$series[[length(chart_options$series) + 1]] = list(
+      name = col,
+      data = d[[col]]
+    )
   }
+    # Enable tooltips with custom format showing X and Y values with labels
+  chart_options = hc_enabletooltips(chart_options)
+  chart_options$tooltip = list(
+    pointFormat = '<b>{point.y}</b> {series.name}',
+    useHTML = TRUE
+  )
+
+  chart_options$legend = list(
+    enabled = length(chart_options$series) > 1,
+    align = if(length(chart_options$series) > 3) "left" else "center",
+    verticalAlign = if(length(chart_options$series) > 3) "middle" else "bottom",
+    layout = if(length(chart_options$series) > 3) "vertical" else "horizontal",
+    itemMarginTop = if(length(chart_options$series) > 3) 2 else 10,
+    itemMarginBottom = if(length(chart_options$series) > 3) 2 else 10
+  )
   
-  if(cV=='Casualty Type'){ # Casualty Type is only an option if chooseData == "Casualties".
-
-    p = ggplot() + 
-      geom_line(data=d,aes(x=X,y=n,group = 1,color='Killed'),size=1,alpha=0.5) + 
-      geom_point(data=d,aes(x=X,y=n,group = 1,color='Killed'),size=1,,alpha=1) +
-      geom_line(data=d,aes(x=X,y=n,group = 1,color='Injured'),size=1,alpha=0.5) + 
-      geom_point(data=d,aes(x=X,y=n,group = 1,color='Injured'),size=1,,alpha=1)
-
-  } else {
-    
-    p = d %>% ggplot()
-    
-    if(cV=='None') {
-
-      p = p + 
-        geom_line(
-          aes(x = X, y = Events, group = 1), 
-          size = 1, alpha = 0.5
-        ) + 
-        geom_point(
-          aes(x = X,y = Events, group = 1),
-          size = 1 ,
-          fill = 'black',
-          alpha = 1
-        ) 
-
-    } else {
-
-      p = p + 
-        geom_line(aes(x=X,y=Events,group = 1,color=!!sym(cV)),size=1,alpha=0.5) + 
-        geom_point(aes(x=X,y=Events,group = 1,color=!!sym(cV)),size=1,alpha=1)
-    }
-    
-  }
-  
-  p = p +
-    ylab('Frequency') +
-    xlab('Time') +
-    theme_classic()
-  
-  if(input$graphPeriods == 'Annually'){
-    p = p + scale_x_continuous(breaks = options$Year) 
-  } else {
-    p = p + scale_x_discrete(breaks = paste0(options$Year,'_0', 1))
-  }
-  
-  p = p + scale_y_continuous(breaks = function(x) unique(floor(pretty(seq(0, (max(x) + 1) * 1.1)))))
-
-  return(p)
-
+  # Create the chart HTML with a div container
+  return(div(
+    id = "myplot",
+    style = "height: 400px; width: 100%;",
+    hc_html('myplot', chart_options)
+  ))
 })
 
 
