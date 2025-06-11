@@ -34,7 +34,7 @@ These datasets share many common variables while maintaining distinct characteri
 
 #### 4. Specialized Violence Mapping
 - **Multiple violence types**: Rockets (Rocket.Number), incendiary balloons (Balloon.Number), riots, and riot subcategories
-- **Riot analysis**: Detailed breakdown using Combined_Crimes and Riot.Sub.Category
+- **Riot analysis**: Detailed breakdown using Crimes and Riot.Sub.Category
 - **Temporal filtering**: Year and month-based subsetting
 
 ### Time-Series Analysis

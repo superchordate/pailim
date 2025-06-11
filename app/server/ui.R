@@ -31,11 +31,11 @@ observeEvent(
     print(input$casualtyType)
     
     if(input$palestine_or_israel=='Both'){
-      color_choices = c('None','Palestine/Israel', 'Combined_Crimes')
+      color_choices = c('None','Palestine/Israel', 'Crimes')
     } else if (input$palestine_or_israel=='Palestinian Actions'){
-      color_choices = c('None','Combined_Crimes', 'Perpetrator.Origin','Region')
+      color_choices = c('None','Crimes', 'Perpetrator.Origin','Region')
     } else if (input$palestine_or_israel=='Israeli Actions'){
-      color_choices = c('None','Combined_Crimes', 'Perpetrator.Type','City')
+      color_choices = c('None','Crimes', 'Perpetrator.Type','City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){
@@ -115,7 +115,7 @@ output$dynamic_inputs = renderUI({
     ),
     
     
-        pickerInput('Combined_Crimes','Combined Crimes',choices=options$Combined_Crimes,selected=options$Combined_Crimes,multiple=TRUE,
+        pickerInput('selectedCrimes','Crimes',choices=options$Crimes,selected=options$Crimes,multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
                       `deselect-all-text` = "None",
