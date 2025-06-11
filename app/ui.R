@@ -16,11 +16,24 @@ ui = dashboardPage(
       ),
       div(
         id='form',
-        uiOutput('visualtype'),
-        selectInput('datatype','Select Data',choices=c('Both', 'Palestinian Actions','Israeli Actions')),
-        uiOutput('yearmonth'),
-        uiOutput('ctrlUI'),
-        uiOutput('p3'),
+        selectInput('palestine_or_israel','Palestine and/or Israel',choices=c('Both', 'Palestinian Actions','Israeli Actions')),
+        # chooseData options will be set based on palestine_or_israel selection.
+        selectInput('chooseData','Choose Data',choices=NULL,selected=NULL),
+        # year and month.        
+        pickerInput('year','Select Year',choices=options$Year,selected=tail(options$Year, 5),multiple=TRUE,
+                    options = list(
+                      `actions-box` = TRUE,
+                      `deselect-all-text` = "None",
+                      `select-all-text` = "All"
+                    )),
+        pickerInput('month','Select Month',choices=months,selected=months,multiple=TRUE,
+                    options = list(
+                      `actions-box` = TRUE,
+                      `deselect-all-text` = "None",
+                      `select-all-text` = "All"
+                    )),
+                    
+        uiOutput('dynamic_inputs'),
         actionButton("resetAll", "Reset")
       )
     )
@@ -38,7 +51,14 @@ ui = dashboardPage(
       ),
       tabItem(
         tabName = "Lines",
-        plotlyOutput("myplot",height=400),
+        div(
+          selectInput('graphPeriods','Graph Periods',choices=sort(c('Annually','Monthly','Quarterly','Weekly'))),          
+          conditionalPanel(
+            condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
+            selectInput('cV','Color by',choices=NULL)
+          ),
+          plotlyOutput("myplot",height=400)
+        ),
         br(),
         uiOutput("p2"),
         plotlyOutput("myplot1",height=400)

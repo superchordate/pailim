@@ -1,16 +1,15 @@
 output$vertabUI = renderUI({
-  #req(input$maptype=='Events')
+  #req(input$chooseData=='Events')
   tagList(
     div(style = 'height:200px; overflow-y: scroll;overflow-x: scroll;', DTOutput("vertab") %>% withSpinner(color='#000000'))
   )
 })
 #})
 
-
 # get the boundaries of map to display the actions in text (on bottom)
 vertab = reactive({
   req(!is.null(input$mymap_bounds))
-  #req(input$maptype=='Events')
+  #req(input$chooseData=='Events')
   
   bounds = input$mymap_bounds
   d = dataPlot()

@@ -6,8 +6,8 @@ output$myplot = renderPlotly({
 
 mainplot_data = reactive({
 
-  req(input$datatype)
-  req(input$graphType)
+  req(input$palestine_or_israel)
+  req(input$graphPeriods)
   req(dataPlot())
   req(input$cV)
 
@@ -28,56 +28,55 @@ mainplot_data = reactive({
     d = d %>% pivot_longer(cols=contains('Type.Violence'),values_to='Type.Violence',values_drop_na = TRUE)
     d = d %>% filter(Type.Violence %in% input$primary.violence)
   }  
-  
-  if(input$maptype=='Casualties'){
+  print(glue("graphPeriods: {input$graphPeriods}"))
+  if(input$chooseData=='Casualties'){
     
     if(input$casualtype=='All') {
       
       if(cV=='None'){
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d = d %>% group_by(Year) %>% summarise(n=sum(Casualties,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Casualties,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Casualties,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d= d %>% group_by(Year,Week) %>% summarise(n=sum(Casualties,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
-          #d= d %>% mutate(Xn = 1:n())
         }
       } else if (cV=='Casualty Type') {
         
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d1 = d %>% group_by(Year) %>% summarise(n=sum(Killed,na.rm=T)) %>% mutate(X=Year)
           d2 = d %>% group_by(Year) %>% summarise(n=sum(Injured,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d1 = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
           d2 = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d1 = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
           d2 = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d1 = d %>% group_by(Year,Week) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
           d2 = d %>% group_by(Year,Week) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
         }
         
         
       } else {
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=sum(Casualties,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=sum(Casualties,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=sum(Casualties,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=sum(Casualties,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
         }
       }
@@ -85,29 +84,29 @@ mainplot_data = reactive({
     else if(input$casualtype=='Killed') {
       
       if(cV=='None'){
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d = d %>% group_by(Year) %>% summarise(n=sum(Killed,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d= d %>% group_by(Year,Week) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
         }
       } else {
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=sum(Killed,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=sum(Killed,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
         }
       }
@@ -115,189 +114,189 @@ mainplot_data = reactive({
     else if(input$casualtype=='Injured') {
       
       if(cV=='None'){
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d = d %>% group_by(Year) %>% summarise(n=sum(Injured,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d= d %>% group_by(Year,Week) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
         }
       } else {
-        if(input$graphType=='Annually'){
+        if(input$graphPeriods=='Annually'){
           d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=sum(Injured,na.rm=T)) %>% mutate(X=Year)
         }
-        else if(input$graphType=='Monthly'){
+        else if(input$graphPeriods=='Monthly'){
           d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
         }
-        else if(input$graphType=='Quarterly'){
+        else if(input$graphPeriods=='Quarterly'){
           d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
         }
-        else if(input$graphType=='Weekly'){
+        else if(input$graphPeriods=='Weekly'){
           d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=sum(Injured,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
         }
       }
     }
     
     
-  } else if (input$maptype=='Events'){
+  } else if (input$chooseData=='Events'){
     
     if(cV=='None'){
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(Year) %>% summarise(n=n()) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(n=n()) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(Year,Quarter) %>% summarise(n=n()) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(Year,Week) %>% summarise(n=n()) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     } else {
       
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=n()) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=n()) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=n()) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=n()) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
     
   }
   
-  else if (input$maptype=='Detentions' & input$datatype=='Israeli Actions') {
+  else if (input$chooseData=='Detentions' & input$palestine_or_israel=='Israeli Actions') {
     
     if(cV=='None'){
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(Year) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(Year,Week) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     } else {
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=sum(Detained.Arrested,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
     
   }
   
-  else if (input$maptype=='Rockets' & input$datatype=='Palestinian Actions') {
+  else if (input$chooseData=='Rockets' & input$palestine_or_israel=='Palestinian Actions') {
     
     if(cV=='None'){
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(Year) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(Year,Week) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     } else {
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
   }
   
-  else if(input$maptype=='Incendiary Balloons' & input$datatype=='Palestinian Actions') {
+  else if(input$chooseData=='Incendiary Balloons' & input$palestine_or_israel=='Palestinian Actions') {
     
     if(cV=='None'){
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(Year) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(Year,Quarter) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(Year,Week) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     } else {
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=sum(Balloon.Number,na.rm=T)) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
   } 
-  else if(input$maptype=='Riots' & input$datatype=='Palestinian Actions'){
+  else if(input$chooseData=='Riots' & input$palestine_or_israel=='Palestinian Actions'){
     
     d = d %>% filter(Type.Violence=='Riot'|Secondary.Type.Violence.2=='Riot') %>% filter(Riot.SubCategory %in% input$riot.sub)
     
     if(cV=='None'){
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(Year) %>% summarise(n=n()) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(n=n()) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(Year,Quarter) %>% summarise(n=n()) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(Year,Week) %>% summarise(n=n()) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     } else {
-      if(input$graphType=='Annually'){
+      if(input$graphPeriods=='Annually'){
         d = d %>% group_by(!!sym(cV),Year) %>% summarise(n=n()) %>% mutate(X=Year)
       }
-      else if(input$graphType=='Monthly'){
+      else if(input$graphPeriods=='Monthly'){
         d = d %>% group_by(!!sym(cV),Year,MonthNum) %>% summarise(n=n()) %>% arrange(Year,MonthNum) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
-      else if(input$graphType=='Quarterly'){
+      else if(input$graphPeriods=='Quarterly'){
         d = d %>% group_by(!!sym(cV),Year,Quarter) %>% summarise(n=n()) %>% arrange(Year,Quarter) %>% mutate(X=paste0(Year,'_',Quarter))
       }
-      else if(input$graphType=='Weekly'){
+      else if(input$graphPeriods=='Weekly'){
         d= d %>% group_by(!!sym(cV),Year,Week) %>% summarise(n=n()) %>% arrange(Year,Week) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
@@ -322,9 +321,9 @@ myplot = reactive({
   d = mainplot_data()$d  
   cV = mainplot_data()$cV
   
-  # if input$graphType != Annually, the time frame will be added to the data as a column
+  # if input$graphPeriods != Annually, the time frame will be added to the data as a column
   #  and X will expand to show the period number. 
-  # for example, if graphType == "Monthly" and cV == "None" then d is:
+  # for example, if graphPeriods == "Monthly" and cV == "None" then d is:
   # A tibble: 54 × 4
   # Groups:   Year [5]
   # Year MonthNum     n X      
@@ -340,7 +339,7 @@ myplot = reactive({
   # 9  2019        9   360 2019_9 
   # 10  2019       10   396 2019_10
   
-  if(cV=='Casualty Type'){ # Casualty Type is only an option if maptype (Visual Type) == "Casualties".
+  if(cV=='Casualty Type'){ # Casualty Type is only an option if chooseData (Choose Datae) == "Casualties".
   
     # if cv == "Casualty Type", then d1 and d2 are defined (d is NULL) and like:
     # A tibble: 5 × 3
@@ -352,7 +351,7 @@ myplot = reactive({
     # 4  2022   221  2022
     # 5  2023   196  2023  
     
-    if(input$graphType!='Annually'){
+    if(input$graphPeriods!='Annually'){
       d1 = d1 %>% ungroup() %>% mutate(X=factor(X,levels=unique(d1$X)))
       d2 = d2 %>% ungroup() %>% mutate(X=factor(X,levels=unique(d2$X)))
     }
@@ -383,10 +382,10 @@ myplot = reactive({
     # # ℹ 109 more rows
     # # ℹ Use `print(n = ...)` to see more rows
     
-    # d example if cV == "datatype":
+    # d example if cV == "palestine_or_israel":
     # A tibble: 10 × 4
-    # Groups:   datatype [2]
-    # datatype   Year     n     X
+    # Groups:   palestine_or_israel [2]
+    # palestine_or_israel   Year     n     X
     # <fct>     <int> <int> <int>
     #   1 Israel     2019  3825  2019
     # 2 Israel     2020  1196  2020
@@ -399,7 +398,7 @@ myplot = reactive({
     # 9 Palestine  2022   308  2022
     # 10 Palestine  2023   200  2023
     
-    if(input$graphType!='Annually'){d = d %>% ungroup() %>% mutate(X=factor(X,levels=unique(d$X)))}
+    if(input$graphPeriods!='Annually'){d = d %>% ungroup() %>% mutate(X=factor(X,levels=unique(d$X)))}
     
     p = d %>% ggplot()
     
@@ -428,16 +427,16 @@ myplot = reactive({
     xlab('Time') +
     theme_classic()
   
-  if(input$graphType=='Annually'){
+  if(input$graphPeriods=='Annually'){
     p = p + scale_x_continuous(breaks = options$Year) 
   }
-  else if(input$graphType=='Monthly'){
+  else if(input$graphPeriods=='Monthly'){
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_',1))
   }
-  else if(input$graphType=='Quarterly'){
+  else if(input$graphPeriods=='Quarterly'){
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_',1))
   }
-  else if(input$graphType=='Weekly'){
+  else if(input$graphPeriods=='Weekly'){
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_',1))
   }
   p = p + scale_y_continuous(breaks = function(x) unique(floor(pretty(seq(0, (max(x) + 1) * 1.1)))))

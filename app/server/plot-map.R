@@ -1,13 +1,13 @@
 # this is the map
 output$mymap = renderLeaflet({
   
-  
   req(d())
   req(dataPlot())
+  req(input$palestine_or_israel)
   
   d = dataPlot()
   
-  if(input$maptype=='Events'){
+  if(input$chooseData=='Events'){
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(lng=~Longitude,lat=~Latitude,
                   icon = ~countries[datatype],
@@ -15,7 +15,7 @@ output$mymap = renderLeaflet({
                   clusterOptions = markerClusterOptions()) -> p
   }
   
-  else if(input$maptype=='Casualties' & input$casualtype=='All'){
+  else if(input$chooseData=='Casualties' & input$casualtype=='All'){
     d = d %>% filter(Casualties>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
@@ -27,7 +27,7 @@ output$mymap = renderLeaflet({
     
   }
   
-  else if(input$maptype=='Casualties' & input$casualtype=='Killed'){
+  else if(input$chooseData=='Casualties' & input$casualtype=='Killed'){
     d = d %>% filter(Killed>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
@@ -38,7 +38,7 @@ output$mymap = renderLeaflet({
       ) -> p
   }
   
-  else if(input$maptype=='Casualties' & input$casualtype=='Injured'){
+  else if(input$chooseData=='Casualties' & input$casualtype=='Injured'){
     d = d %>% filter(Injured>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% 
       addMarkers(
@@ -49,7 +49,7 @@ output$mymap = renderLeaflet({
       ) -> p
   }
   
-  else if(input$maptype=='Detentions'){
+  else if(input$chooseData=='Detentions'){
     d = d %>% filter(Detained.Arrested>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% addMarkers(
       lng=~Longitude,lat=~Latitude,
@@ -59,7 +59,7 @@ output$mymap = renderLeaflet({
     ) -> p
   }
   
-  else if(input$maptype=='Rockets'){
+  else if(input$chooseData=='Rockets'){
     d = d %>% filter(Rocket.Number>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
       lng=~Longitude,lat=~Latitude,
@@ -69,7 +69,7 @@ output$mymap = renderLeaflet({
     ) -> p
   }
   
-  else if(input$maptype=='Incendiary Balloons'){
+  else if(input$chooseData=='Incendiary Balloons'){
     d = d %>% filter(Balloon.Number>0)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
       lng=~Longitude,lat=~Latitude,
@@ -79,7 +79,7 @@ output$mymap = renderLeaflet({
     ) -> p
   }
   
-  else if(input$maptype=='Riots'){
+  else if(input$chooseData=='Riots'){
     d = d %>% filter(Type.Violence=='Riot'|Secondary.Type.Violence.2=='Riot') %>% 
       filter(Riot.SubCategory %in% input$riot.sub)
     leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>% addMarkers(

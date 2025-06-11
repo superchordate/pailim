@@ -1,11 +1,11 @@
 # covariate plot
 output$myplot1 = renderPlotly({
   
-  req(input$datatype)
+  req(input$palestine_or_israel)
   req(dataPlot())
   print(dim(dataPlot()))
-  req(input$graphType)
-  req(input$datatype %in% c('Palestinian Actions','Israeli Actions', 'Both'))
+  req(input$graphPeriods)
+  req(input$palestine_or_israel %in% c('Palestinian Actions','Israeli Actions', 'Both'))
   req(input$p2!='None')
   
   d = dataPlot() %>% filter(Add==0)
@@ -27,8 +27,8 @@ output$myplot1 = renderPlotly({
   )
   
   
-  if(input$datatype=='Palestinian Actions'){
-    if(input$graphType=='Annually'){
+  if(input$palestine_or_israel=='Palestinian Actions'){
+    if(input$graphPeriods=='Annually'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=Year)
       } else if(input$p2=='Unemployment'){
@@ -53,7 +53,7 @@ output$myplot1 = renderPlotly({
         d = d %>% group_by(Year) %>% summarise(Y=mean(Goods,na.rm=T)) %>% mutate(X=Year)
       }
     }
-    else if(input$graphType=='Monthly'){
+    else if(input$graphPeriods=='Monthly'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
         #d = d %>% group_by(Year,MonthNum) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
@@ -78,7 +78,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
     }
-    else if(input$graphType=='Quarterly'){
+    else if(input$graphPeriods=='Quarterly'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
       } else if(input$p2=='Unemployment'){
@@ -104,7 +104,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
       }
     }
-    else if(input$graphType=='Weekly'){
+    else if(input$graphPeriods=='Weekly'){
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T))
@@ -132,9 +132,9 @@ output$myplot1 = renderPlotly({
         d = d %>% group_by(Year,Week) %>% summarise(Y=round(mean(Coalition.Size,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
-  } else if (input$datatype=='Israeli Actions'){
+  } else if (input$palestine_or_israel=='Israeli Actions'){
     
-    if(input$graphType=='Annually'){
+    if(input$graphPeriods=='Annually'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=Year)
       } else if(input$p2=='Unemployment'){
@@ -160,7 +160,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=Year)
       }
     }
-    else if(input$graphType=='Monthly'){
+    else if(input$graphPeriods=='Monthly'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
         #d = d %>% group_by(Year,MonthNum) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
@@ -185,7 +185,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
     }
-    else if(input$graphType=='Quarterly'){
+    else if(input$graphPeriods=='Quarterly'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
       } else if(input$p2=='Unemployment'){
@@ -211,7 +211,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
       }
     }
-    else if(input$graphType=='Weekly'){
+    else if(input$graphPeriods=='Weekly'){
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T))
@@ -238,9 +238,9 @@ output$myplot1 = renderPlotly({
         d = d %>% group_by(Year,Week) %>% summarise(Y=round(mean(Coalition.Size,na.rm=T))) %>% mutate(X=paste0(Year,'_',Week))
       }
     }
-  } else if (input$datatype=='Both'){
+  } else if (input$palestine_or_israel=='Both'){
     
-    if(input$graphType=='Annually'){
+    if(input$graphPeriods=='Annually'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=Year)
       } else if(input$p2=='Unemployment'){
@@ -266,7 +266,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=Year)
       }
     }
-    else if(input$graphType=='Monthly'){
+    else if(input$graphPeriods=='Monthly'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year,MonthNum) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
         #d = d %>% group_by(Year,MonthNum) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
@@ -291,7 +291,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year,MonthNum) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',MonthNum))
       }
     }
-    else if(input$graphType=='Quarterly'){
+    else if(input$graphPeriods=='Quarterly'){
       if(input$p2=='Consumer Price Index'){
         d = d %>% group_by(Year,Quarter) %>% summarise(Z=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
       } else if(input$p2=='Unemployment'){
@@ -317,7 +317,7 @@ output$myplot1 = renderPlotly({
         #d = d %>% group_by(Year,Quarter) %>% summarise(Y=mean(Total.Imports.Gaza.Israel/Total.Exports.Gaza.Israel,na.rm=T)) %>% mutate(X=paste0(Year,'_',Quarter))
       }
     }
-    else if(input$graphType=='Weekly'){
+    else if(input$graphPeriods=='Weekly'){
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.CPI,na.rm=T),Y=mean(Palestinian.CPI,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.UE.Quarterly,na.rm=T),Y=mean(Palestinian.UE.Quarterly,na.rm=T))
       #d = d %>% group_by(Year,Week) %>% summarise(X=mean(Israeli.Trade.Balance,na.rm=T),Y=mean(Palestinian.Trade.Balance,na.rm=T))
@@ -347,10 +347,10 @@ output$myplot1 = renderPlotly({
   }
   #d = pa %>% group_by(Year) %>% summarise(n=sum(Rocket.Number,na.rm=T)) %>% mutate(X=Year)
   
-  #if(input$graphType!='Annually'){d = d %>% ungroup() %>% mutate(X=factor(X,levels=d$X))}
+  #if(input$graphPeriods!='Annually'){d = d %>% ungroup() %>% mutate(X=factor(X,levels=d$X))}
   print(d)
   print(unique(d$X))
-  if(input$graphType!='Annually'){d = d %>% ungroup() %>% mutate(X=factor(X,levels=unique(d$X)))}
+  if(input$graphPeriods!='Annually'){d = d %>% ungroup() %>% mutate(X=factor(X,levels=unique(d$X)))}
   if('Z' %in% names(d)){
     d %>% 
       ggplot() + 
@@ -368,16 +368,16 @@ output$myplot1 = renderPlotly({
   
   p = p + ylab(ylabel)
   
-  if(input$graphType=='Annually'){
+  if(input$graphPeriods=='Annually'){
     p = p + scale_x_continuous(breaks = options$Year) 
   }
-  else if(input$graphType=='Monthly'){
+  else if(input$graphPeriods=='Monthly'){
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_',1))
   }
-  else if(input$graphType=='Quarterly'){
+  else if(input$graphPeriods=='Quarterly'){
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_',1))
   }
-  else if(input$graphType=='Weekly'){
+  else if(input$graphPeriods=='Weekly'){
     p = p + scale_x_discrete(breaks = paste0(options$Year,'_',1))
   }
   #p = p + scale_y_continuous(breaks = function(x) unique(floor(pretty(seq(0, (max(x) + 1) * 1.1)))))

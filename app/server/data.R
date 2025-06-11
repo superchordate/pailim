@@ -1,7 +1,7 @@
 # update what data to be used for the map/line graph
 d = reactive({
-  #req(input$datatype)
-  switch(input$datatype,
+  #req(input$palestine_or_israel)
+  switch(input$palestine_or_israel,
           "Both" = cm,
           "Palestinian Actions" = pa,
           "Israeli Actions" = il
@@ -15,12 +15,13 @@ dataPlot = reactive({
   req(d())
   req(length(input$year)>0)
   req(length(input$month)>0)
+  req(input$chooseData)
   
   d = d() %>% 
     filter(Year %in% input$year) %>% 
     filter(Month %in% input$month)
   
-  if(input$maptype %in% c('Events','Casualties')){
+  if(input$chooseData %in% c('Events','Casualties')){
     
     if('Secondary.Type.Violence.3'%in%names(d)){
       d = d %>% filter(Type.Violence %in% input$primary.violence | 
@@ -40,7 +41,7 @@ dataPlot = reactive({
     
     
     # Inputs specific to Palestinian data.
-    if(input$datatype=='Palestinian Actions'){
+    if(input$palestine_or_israel=='Palestinian Actions'){
       
       req(length(input$perpetrator.origin)>0)
       
@@ -49,7 +50,7 @@ dataPlot = reactive({
         filter(Region %in% input$region)
 
     # Inputs specific to Israeli data.    
-    } else if(input$datatype=='Israeli Actions'){
+    } else if(input$palestine_or_israel=='Israeli Actions'){
       
       if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
       if(length(input$gover) > 0) d %<>% filter(City %in% input$gover)
