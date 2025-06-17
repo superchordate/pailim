@@ -46,22 +46,39 @@ dataPlot = reactive({
           d <- d[0, ]
       }
   }
-  
-  if(input$chooseData %in% c('Events','Casualties')){    
+
+  # Inputs specific to Palestinian data.
+  if(input$actor=='Palestinian Actions'){
+
+    if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
+    if(length(input$region) > 0) d %<>% filter(Region %in% input$region)
+
+  # Inputs specific to Israeli data.    
+  } else if(input$actor=='Israeli Actions'){
     
-    # Inputs specific to Palestinian data.
-    if(input$actor=='Palestinian Actions'){
+    if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
+    if(length(input$gover) > 0) d %<>% filter(City %in% input$gover)
+    
+  }
 
-      if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
-      if(length(input$region) > 0) d %<>% filter(Region %in% input$region)
-
-    # Inputs specific to Israeli data.    
-    } else if(input$actor=='Israeli Actions'){
-      
-      if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
-      if(length(input$gover) > 0) d %<>% filter(City %in% input$gover)
-      
-    }
+  # Special input$chooseData
+  if(input$chooseData=='Casualties' & input$casualtyType=='All'){
+    d = d %>% filter(Casualties > 0)      
+  } else if(input$chooseData=='Casualties' & input$casualtyType=='Killed'){
+    d = d %>% filter(Killed > 0)
+  } else if(input$chooseData=='Casualties' & input$casualtyType=='Injured'){
+    d = d %>% filter(Injured > 0)
+  } else if(input$chooseData == 'Detentions') {
+    d = d %>% filter(Detained.Arrested > 0)
+  } else if(input$chooseData == 'Rockets') {
+    d = d %>% filter(Rocket.Number > 0)
+  } else if(input$chooseData == 'Incendiary Balloons') {
+    d = d %>% filter(Balloon.Number > 0)
+  } else if(input$chooseData == 'Riots') {
+    d %>% filter(
+      str_detect(`Type of Action`, "\\bRiot\\b"),
+      Riot.SubCategory %in% input$riot.sub
+    )
   }
 
   return(d)
