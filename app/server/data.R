@@ -41,8 +41,6 @@ dataPlot = reactive({
           # If no indices found, return an empty data frame
           d <- d[0, ]
       }
-      
-      #print(unique(d$Crimes))
   }
   
   if(input$chooseData %in% c('Events','Casualties')){    

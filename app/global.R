@@ -16,9 +16,7 @@ require(stringr)
 require(magrittr)
 require(easyr)
 
-# load data for shiny
-load('data.RData')
-#load('data_subset.RData')
+qs_readm('data.qs2')
 
 countries = iconList(
   Israel = makeIcon("www/flag-of-Israel.png", "www/flag-of-Israel.png",iconWidth=20, iconHeight=15),
@@ -26,7 +24,6 @@ countries = iconList(
 )
 
 months = c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
-
 
 # available plot types for selected actions
 chooseData_both = sort(c('Events', 'Casualties'))

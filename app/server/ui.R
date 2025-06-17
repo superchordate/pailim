@@ -27,9 +27,6 @@ observeEvent(
     input$casualtyType
   },{
     
-    print(input$chooseData)
-    print(input$casualtyType)
-    
     if(input$palestine_or_israel=='Both'){
       color_choices = c('None','Palestine/Israel', 'Crimes')
     } else if (input$palestine_or_israel=='Palestinian Actions'){

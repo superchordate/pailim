@@ -1,5 +1,6 @@
 *.RData
 *.csv
+*.qs2
 secrets
 raw-data/
 cache/
