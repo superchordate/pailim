@@ -126,7 +126,7 @@ output$dynamic_inputs = renderUI({
        # Inputs specific to Israeli data.
       conditionalPanel(
         condition="input.actor=='Israeli Actions'",
-        pickerInput('perpetrator.type','Select Perpetrator Type',choices=sort(na.omit(unique(d()$Perpetrator.Type))),selected=na.omit(unique(d()$Perpetrator.Type)),multiple=TRUE,
+        pickerInput('perpetrator.type','Perpetrator Type',choices=sort(na.omit(unique(d()$Perpetrator.Type))),selected=na.omit(unique(d()$Perpetrator.Type)),multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
                       `deselect-all-text` = "None",
@@ -144,7 +144,7 @@ output$dynamic_inputs = renderUI({
       # Inputs specific to Palestinian data.
       conditionalPanel(
         condition="input.actor=='Palestinian Actions'",
-        pickerInput('perpetrator.origin','Select Perpetrator Origin',choices=sort(na.omit(unique(d()$Perpetrator.Origin))),selected=na.omit(unique(d()$Perpetrator.Origin)),multiple=TRUE,
+        pickerInput('perpetrator.origin','Perpetrator Origin',choices=sort(na.omit(unique(d()$Perpetrator.Origin))),selected=na.omit(unique(d()$Perpetrator.Origin)),multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
                       `deselect-all-text` = "None",
