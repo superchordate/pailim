@@ -28,11 +28,11 @@ observeEvent(
   },{
     
     if(input$actor=='Both'){
-      color_choices = c('None','Palestine/Israel', 'Crimes')
+      color_choices = c('None', 'Palestine/Israel', 'Type of Action')
     } else if (input$actor=='Palestinian Actions'){
-      color_choices = c('None','Crimes', 'Perpetrator.Origin','Region')
+      color_choices = c('None', 'Type of Action', 'Perpetrator.Origin','Region')
     } else if (input$actor=='Israeli Actions'){
-      color_choices = c('None','Crimes', 'Perpetrator.Type','City')
+      color_choices = c('None', 'Type of Action', 'Perpetrator.Type','City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){
@@ -112,12 +112,16 @@ output$dynamic_inputs = renderUI({
     ),
     
     
-        pickerInput('selectedCrimes','Crimes',choices=options$Crimes,selected=options$Crimes,multiple=TRUE,
-                    options = list(
-                      `actions-box` = TRUE,
-                      `deselect-all-text` = "None",
-                      `select-all-text` = "All"
-                    )),
+        pickerInput(
+          'selectedActionTypes', 'Type of Action',
+          choices = options$`Type of Action`,
+          selected = options$`Type of Action`, 
+          multiple = TRUE,
+          options = list(
+            `actions-box` = TRUE,
+            `deselect-all-text` = "None",
+            `select-all-text` = "All"
+          )),
 
        # Inputs specific to Israeli data.
       conditionalPanel(

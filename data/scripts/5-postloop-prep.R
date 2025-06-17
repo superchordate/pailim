@@ -90,12 +90,12 @@ if(!cache.ok(5)){
         pa %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report,Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel,Victim.Type,`Palestine/Israel`,
-            Crimes
+            `Type of Action`
         ),
         il %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report, Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel, Victim.Type,`Palestine/Israel`,
-            Crimes = Combined_Crimes
+            `Type of Action` = Combined_Crimes
         )
     )
     cm$`Palestine/Israel` = factor(cm$`Palestine/Israel`)

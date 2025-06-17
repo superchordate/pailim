@@ -81,7 +81,7 @@ output$mymap = renderLeaflet({
   else if(input$chooseData=='Riots'){
 
     d %>% filter(
-      str_detect(d$Crimes, "\\bRiot\\b"),
+      str_detect(d$`Type of Action`, "\\bRiot\\b"),
       Riot.SubCategory %in% input$riot.sub
     )
 

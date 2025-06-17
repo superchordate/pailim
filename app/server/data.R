@@ -25,15 +25,15 @@ dataPlot = reactive({
     filter(Year %in% input$year) %>% 
     filter(Month %in% input$month)
 
-  # apply Crimes filter.
+  # apply `Type of Action` filter.
   # this data field has ;-separated values so filtering is a bit tricky.
   if(
-      (length(input$selectedCrimes) > 0) &&
-      (!identical(input$selectedCrimes, options$Crimes))
+      (length(input$selectedActionTypes) > 0) &&
+      (!identical(input$selectedActionTypes, options$`Type of Action`))
   ) {
-      # loop over each value in selectedCrimes and capture the matching indices, then take the union and apply as a filter. 
-      indices = lapply(input$selectedCrimes, function(crime) {
-          which(str_detect(d$Crimes, paste0("\\b", crime, "\\b")))
+      # loop over each value in selectedActionTypes and capture the matching indices, then take the union and apply as a filter. 
+      indices = lapply(input$selectedActionTypes, function(crime) {
+          which(str_detect(d$`Type of Action`, paste0("\\b", crime, "\\b")))
       })
       
       if (length(indices) > 0) {

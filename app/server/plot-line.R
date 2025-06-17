@@ -20,7 +20,7 @@ mainplot_data = reactive({
 
   # Add Events count (just 1 per row).
   d$Events = 1
-  d$Riots = str_detect(d$Crimes, "\\bRiot\\b") * 1
+  d$Riots = str_detect(d$`Type of Action`, "\\bRiot\\b") * 1
 
   # Set up the periods.
   d$X = if(graphPeriods == 'Annually') {
@@ -68,14 +68,14 @@ mainplot_data = reactive({
     }
   }
 
-  # Special handling for Crimes.
-  if(cV=='Crimes'){
+  # Special handling for `Type of Action`.
+  if(cV=='Type of Action'){
 
-    # Loop over each input$selectedCrimes selection and create a metric column that can be used later for plotting.
-    for(crime in input$selectedCrimes){
+    # Loop over each input$selectedActionTypes selection and create a metric column that can be used later for plotting.
+    for(crime in input$selectedActionTypes){
 
       # Add a column we can sum to count actions. 
-      d[[crime]] = str_detect(d$Crimes, paste0("\\b", crime, "\\b")) * d[[sum_cols[1]]]
+      d[[crime]] = str_detect(d$`Type of Action`, paste0("\\b", crime, "\\b")) * d[[sum_cols[1]]]
 
       # Capture this as a column we need to sum in the upcoming group and sum operation.
       sum_cols = c(sum_cols, crime)
@@ -103,7 +103,7 @@ mainplot_data = reactive({
 
   if(chooseData=='Riots' & actor=='Palestinian Actions'){    
     d %<>% filter(
-      str_detect(d$Crimes, "\\bRiot\\b"),
+      str_detect(d$`Type of Action`, "\\bRiot\\b"),
       Riot.SubCategory %in% riot.sub
     )
   }

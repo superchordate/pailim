@@ -8,7 +8,7 @@ vertab = reactive({
         select(
             Year, Month, 
             Type = `Palestine/Israel`, 
-            Crimes,
+            `Type of Action`,
             Injured, Killed, 
             Description = Verbatim.Report,
             Longitude, Latitude
@@ -16,7 +16,7 @@ vertab = reactive({
         mutate(
             Year = as.integer(Year),
             Month = factor(Month, levels = month.abb),
-            Crimes = factor(Crimes),
+            `Type of Action` = factor(`Type of Action`),
             Type = factor(fifelse(
                 Type == 'Palestine', 
                 'Palestinian Actions',

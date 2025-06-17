@@ -17,7 +17,7 @@ runfolder("scripts")
 # object the app can use. 
 options = list(
     Year = sort(unique(cm$Year)),
-    Crimes = sort(unique(trimws(unlist(strsplit(unique(cm$Crimes), ";")))))
+    `Type of Action` = sort(unique(trimws(unlist(strsplit(unique(cm$`Type of Action`), ";")))))
 )
 
 #save(list = c('pa', 'il', 'cm', 'options'), file = '../app/data.RData')
