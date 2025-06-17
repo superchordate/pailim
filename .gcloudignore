@@ -1,0 +1,6 @@
+.github/
+commands/
+data/
+*.zip
+*.docx
+README.md

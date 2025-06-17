@@ -11,9 +11,12 @@ RUN apt-get update && \
 
 RUN Rscript -e 'install.packages(c("easyr", "tidyr", "glue", "shinyjs", "data.table", "leaflet", "dplyr", "shinycssloaders", "shiny", "shinydashboard", "shinyWidgets", "DT", "plotly", "scales", "qs2", "stringr", "magrittr", "easyr"))'
 
+# Copy the app folder from the local directory into the container
+COPY app/ /app/
+
+# Set working directory to /app so the app can find data.qs2 with relative paths
+WORKDIR /app
+
 EXPOSE 3838
 
-CMD gsutil cp gs://import-loud-galaxy/app.zip ./ && \ 
-    unzip app.zip && \
-    rm app.zip && \
-    Rscript -e 'shiny::runApp("app", port = 3838, host = "0.0.0.0")'
+CMD Rscript -e 'shiny::runApp(".", port = 3838, host = "0.0.0.0")'
