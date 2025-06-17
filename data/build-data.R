@@ -8,6 +8,7 @@ require(easyr)
 require(magrittr)
 require(glue)
 require(data.table)
+require(qs2)
 
 begin()
 
@@ -19,4 +20,5 @@ options = list(
     Crimes = sort(unique(trimws(unlist(strsplit(unique(cm$Crimes), ";")))))
 )
 
-save(list = c('pa', 'il', 'cm', 'options'), file = '../app/data.RData')
+#save(list = c('pa', 'il', 'cm', 'options'), file = '../app/data.RData')
+qs_savem(cm, il, pa, options, file = "../app/data.qs2")
