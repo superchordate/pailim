@@ -1,4 +1,4 @@
-# Palestine vs. Israel Violence Data Visualization
+# Palestinian-Israeli Insurgency & Militarism (PA'ILIM) Dataset Violence Data Visualization
 
 An interactive R Shiny web application for visualizing and analyzing two parallel datasets documenting violence between Israelis and Palestinians.
 
