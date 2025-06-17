@@ -3,7 +3,6 @@ output$mymap = renderLeaflet({
   
   req(d())
   req(dataPlot())
-  req(input$palestine_or_israel)
   
   d = dataPlot()
   

@@ -1,6 +1,6 @@
 mainplot_data = reactive({
 
-  req(input$palestine_or_israel)
+  req(input$actor)
   req(input$graphPeriods)
   req(dataPlot())
   req(input$cV)
@@ -10,7 +10,7 @@ mainplot_data = reactive({
   cV = input$cV
   chooseData = input$chooseData
   casualtyType = input$casualtyType
-  palestine_or_israel = input$palestine_or_israel
+  actor = input$actor
   graphPeriods = input$graphPeriods
   riot.sub = input$riot.sub
   primary.violence = input$primary.violence
@@ -52,13 +52,13 @@ mainplot_data = reactive({
     c("Events")  
 
   # Israeli-only Actions
-  } else if(palestine_or_israel=='Israeli Actions'){
+  } else if(actor=='Israeli Actions'){
     if(chooseData == 'Detentions') {
       c("Detained.Arrested")
     }
 
   # Palestine-only Actions
-  } else if(palestine_or_israel == "Palestinian Actions") {
+  } else if(actor == "Palestinian Actions") {
     if(chooseData == 'Rockets') {
       c("Rocket.Number")
     } else if(chooseData == 'Incendiary Balloons') {
@@ -89,7 +89,7 @@ mainplot_data = reactive({
   } else {
 
     if(is.null(sum_cols)) stop(glue("
-      mainplot_data: Unhanded case for chooseData: {chooseData}; palestine_or_israel: {palestine_or_israel}
+      mainplot_data: Unhanded case for chooseData: {chooseData}; actor: {actor}
     "))
 
     # Identify columns we'll be grouping by.
@@ -101,7 +101,7 @@ mainplot_data = reactive({
 
   }
 
-  if(chooseData=='Riots' & palestine_or_israel=='Palestinian Actions'){    
+  if(chooseData=='Riots' & actor=='Palestinian Actions'){    
     d %<>% filter(
       str_detect(d$Crimes, "\\bRiot\\b"),
       Riot.SubCategory %in% riot.sub
@@ -135,7 +135,6 @@ covariate_data = reactive({
 
   # Extract input values. 
   # I set these up here to make it clear which ones are used below, and also to avoid repetitive input$ calls.
-  palestine_or_israel = input$palestine_or_israel
   selectedCovariates = input$selectedCovariates
   graphPeriods = input$graphPeriods
   

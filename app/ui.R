@@ -16,8 +16,8 @@ ui = dashboardPage(
       ),
       div(
         id='form',
-        selectInput('palestine_or_israel','Palestine and/or Israel',choices=c('Both', 'Palestinian Actions','Israeli Actions')),
-        # chooseData options will be set based on palestine_or_israel selection.
+        selectInput('actor','Actor',choices=c('Both', 'Palestinian Actions','Israeli Actions')),
+        # chooseData options will be set based on actor selection.
         selectInput('chooseData','Choose Data',choices=NULL,selected=NULL),
         # year and month.        
         pickerInput('year','Select Year',choices=options$Year,selected=tail(options$Year, 5),multiple=TRUE,

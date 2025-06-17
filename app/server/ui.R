@@ -4,13 +4,13 @@ observeEvent(input$resetAll, {
 })
 
 # update graph choice based on selected actions
-observeEvent(input$palestine_or_israel,{
+observeEvent(input$actor,{
   
-  if(input$palestine_or_israel=='Both'){
+  if(input$actor=='Both'){
     updated_choices = chooseData_both
-  } else if (input$palestine_or_israel=='Palestinian Actions'){
+  } else if (input$actor=='Palestinian Actions'){
     updated_choices = chooseData_pa
-  } else if (input$palestine_or_israel=='Israeli Actions'){
+  } else if (input$actor=='Israeli Actions'){
     updated_choices = chooseData_il
   }
   
@@ -27,11 +27,11 @@ observeEvent(
     input$casualtyType
   },{
     
-    if(input$palestine_or_israel=='Both'){
+    if(input$actor=='Both'){
       color_choices = c('None','Palestine/Israel', 'Crimes')
-    } else if (input$palestine_or_israel=='Palestinian Actions'){
+    } else if (input$actor=='Palestinian Actions'){
       color_choices = c('None','Crimes', 'Perpetrator.Origin','Region')
-    } else if (input$palestine_or_israel=='Israeli Actions'){
+    } else if (input$actor=='Israeli Actions'){
       color_choices = c('None','Crimes', 'Perpetrator.Type','City')
     }
     
@@ -50,7 +50,7 @@ observeEvent(
 # this is to update the covariate plot options
 observeEvent(
   {
-    input$palestine_or_israel
+    input$actor
     input$graphPeriods
   },{
     #req(input$tab=="lines")
@@ -62,7 +62,7 @@ observeEvent(
     
     updated_choices=NULL
     
-    if(input$palestine_or_israel=='Both' | input$palestine_or_israel=='Palestinian Actions' | input$palestine_or_israel=='Israeli Actions'){
+    if(input$actor=='Both' | input$actor=='Palestinian Actions' | input$actor=='Israeli Actions'){
       if(input$graphPeriods=='Annually'){
         updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
                           'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
@@ -80,7 +80,7 @@ observeEvent(
                           'Israeli Coalition Size','Israeli Operation','Rainfall','Stock Market Index',
                           'Temperature','UN Vote','US-Israel State Visits')
       }
-    } else if (input$palestine_or_israel=='Both') {
+    } else if (input$actor=='Both') {
       updated_choices = 'None'
     }
     
@@ -121,7 +121,7 @@ output$dynamic_inputs = renderUI({
 
        # Inputs specific to Israeli data.
       conditionalPanel(
-        condition="input.palestine_or_israel=='Israeli Actions'",
+        condition="input.actor=='Israeli Actions'",
         pickerInput('perpetrator.type','Select Perpetrator Type',choices=sort(na.omit(unique(d()$Perpetrator.Type))),selected=na.omit(unique(d()$Perpetrator.Type)),multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
@@ -139,7 +139,7 @@ output$dynamic_inputs = renderUI({
 
       # Inputs specific to Palestinian data.
       conditionalPanel(
-        condition="input.palestine_or_israel=='Palestinian Actions'",
+        condition="input.actor=='Palestinian Actions'",
         pickerInput('perpetrator.origin','Select Perpetrator Origin',choices=sort(na.omit(unique(d()$Perpetrator.Origin))),selected=na.omit(unique(d()$Perpetrator.Origin)),multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,

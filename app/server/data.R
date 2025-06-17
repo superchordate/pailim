@@ -1,11 +1,15 @@
 # update what data to be used for the map/line graph
 d = reactive({
-  #req(input$palestine_or_israel)
-  switch(input$palestine_or_israel,
-          "Both" = cm,
-          "Palestinian Actions" = pa,
-          "Israeli Actions" = il
-  )
+  req(input$actor)
+  if(input$actor == 'Both') {
+      cm
+  } else if(input$actor == 'Palestinian Actions') {
+      pa
+  } else if(input$actor == 'Israeli Actions') {
+      il
+  } else {
+      stop(glue("Invalid actor selection: {input$actor}"))
+  }
 })
 
 # data used in map/line graphs
@@ -46,13 +50,13 @@ dataPlot = reactive({
   if(input$chooseData %in% c('Events','Casualties')){    
     
     # Inputs specific to Palestinian data.
-    if(input$palestine_or_israel=='Palestinian Actions'){
+    if(input$actor=='Palestinian Actions'){
 
       if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
       if(length(input$region) > 0) d %<>% filter(Region %in% input$region)
 
     # Inputs specific to Israeli data.    
-    } else if(input$palestine_or_israel=='Israeli Actions'){
+    } else if(input$actor=='Israeli Actions'){
       
       if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
       if(length(input$gover) > 0) d %<>% filter(City %in% input$gover)
