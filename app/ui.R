@@ -1,5 +1,5 @@
 ui = dashboardPage(
-  dashboardHeader(title = "Palestinian-Israeli Insurgency & Militarism (PA'ILIM) Dataset"),
+  dashboardHeader(title = "PA'ILIM Dataset"),
   dashboardSidebar(
     useShinyjs(),
     sidebarMenu(
