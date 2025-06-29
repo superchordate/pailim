@@ -14,7 +14,7 @@ try {
 
   // Update the service
   console.log('🔄 Updating service...');
-  execSync('gcloud run services update rshiny --image us-docker.pkg.dev/pailim-dataset/docker/rshiny:latest', { stdio: 'inherit' });
+  execSync('gcloud run services update rshiny --image us-docker.pkg.dev/pailim-dataset/docker/rshiny:latest --timeout=1800', { stdio: 'inherit' }); // 1800 = 30 minutes
 
   // Delete all existing containers except :latest
   console.log('🗑️ Deleting old containers (keeping :latest)...');
