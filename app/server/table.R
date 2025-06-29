@@ -39,7 +39,7 @@ vertab = reactive({
 output$vertab = DT::renderDT(
     vertab(),
     filter = 'top',
-    options = list(dom = 'frtip', pageLength = 5),
+    options = list(dom = 'frtip', pageLength = 5, processing = FALSE),
     rownames = FALSE
 )
 

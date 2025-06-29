@@ -17,7 +17,9 @@ runfolder("scripts")
 # object the app can use. 
 options = list(
     Year = sort(unique(cm$Year)),
-    `Type of Action` = sort(unique(trimws(unlist(strsplit(unique(cm$`Type of Action`), ";")))))
+    `Type of Action: cm` = sort(unique(trimws(unlist(strsplit(unique(cm$`Type of Action`), ";"))))),
+    `Type of Action: pa` = sort(unique(trimws(unlist(strsplit(unique(pa$`Type of Action`), ";"))))),
+    `Type of Action: il` = sort(unique(trimws(unlist(strsplit(unique(il$`Type of Action`), ";")))))
 )
 
 # full mappings for line plots.

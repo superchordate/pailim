@@ -29,7 +29,7 @@ dataPlot = reactive({
   # this data field has ;-separated values so filtering is a bit tricky.
   if(
       (length(input$selectedActionTypes) > 0) &&
-      (!identical(input$selectedActionTypes, options$`Type of Action`))
+      (!identical(sort(input$selectedActionTypes), available_actions))
   ) {
       # loop over each value in selectedActionTypes and capture the matching indices, then take the union and apply as a filter. 
       indices = lapply(input$selectedActionTypes, function(crime) {
@@ -50,7 +50,7 @@ dataPlot = reactive({
   # Inputs specific to Palestinian data.
   if(input$actor=='Palestinian Actions'){
 
-    if(length(input$perpetrator.type) > 0) d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
+    if(length(input$perpetrator.origin) > 0) d %<>% filter(Perpetrator.Origin %in% input$perpetrator.origin)
     if(length(input$region) > 0) d %<>% filter(Region %in% input$region)
 
   # Inputs specific to Israeli data.    
