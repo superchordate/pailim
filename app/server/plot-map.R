@@ -1,10 +1,22 @@
 # this is the map
+map_available_actions = '' # save server-level object for immediate checking of status. 
+map_init = FALSE
 output$mymap = renderLeaflet({
   
   req(d())
   req(dataPlot())
   
   d = dataPlot()
+  
+  # check if we are in the middle of an options change, to prevent loading the map twice.  
+  if(map_init && !identical(map_available_actions, available_actions)){
+    map_available_actions <<- available_actions
+    return(NULL)
+  }
+  if(!map_init){
+    map_available_actions <<- available_actions
+    map_init <<- TRUE
+  }
   
   if(input$chooseData=='Events'){
 
