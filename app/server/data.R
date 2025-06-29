@@ -81,6 +81,30 @@ dataPlot = reactive({
     )
   }
 
+  # Filter to only columns needed by downstream plots/table to reduce memory usage
+  plot_cols = c(
+    # Core columns for map plotting
+    "Longitude", "Latitude", "Palestine/Israel",
+    
+    # Temporal columns for line plotting and table
+    "Year", "Month", "MonthNum", "Quarter", "Week", "Add",
+    
+    # Data columns displayed in maps and line plots
+    "Casualties", "Killed", "Injured", "Detained.Arrested", 
+    "Rocket.Number", "Balloon.Number",
+    
+    # Action data for filtering and display  
+    "Type of Action", "Verbatim.Report",
+    
+    # Grouping/coloring columns used in line plots
+    "Perpetrator.Type", "Region", "City", "Victim.Type",
+    "Riot.SubCategory"
+  )
+  
+  # Only keep columns that exist in the data and are needed
+  available_cols = intersect(plot_cols, colnames(d))
+  d = d %>% select(all_of(available_cols))
+
   return(d)
 
 })
