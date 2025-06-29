@@ -214,7 +214,11 @@ output$lineplot = renderUI({
     `Quarterly` = 'Year_Quarter',
     `Weekly` = 'Year_Week'
   )[[input$graphPeriods]]
-  
+
+  # convert X to numeric. 
+  xvals = unique(d$X)
+  d$X = as.numeric(factor(d$X, levels = xvals, ordered = TRUE)) - 1
+
   # Base options for Highcharts
   chart_options = list(
     chart = list(type = 'line'),
@@ -231,7 +235,9 @@ output$lineplot = renderUI({
     xAxis = list(
       title = list(text = x_title),
       type = "categorical",
-      categories = d$X
+      categories = xvals,
+      endOnTick = FALSE,
+      startOnTick = FALSE
     ),
     plotOptions = list(
       line = list(
