@@ -223,7 +223,10 @@ output$lineplot = renderUI({
       list(
         title = list(text = input$chooseData)
       ),
-      list(title = list(enabled = FALSE), labels = list(enabled = FALSE))
+      list(
+        title = list(text = if(!is.null(covariate_data())) input$selectedCovariates else ""),
+        opposite = TRUE
+      )
     ),
     xAxis = list(
       title = list(text = x_title),
