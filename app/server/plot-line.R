@@ -200,6 +200,11 @@ output$lineplot = renderUI({
   d = mainplot_data()
   colorBy = input$colorBy
 
+  # add missing periods. 
+  d = all_periods[[input$graphPeriods]] %<>% 
+    filter(X >= min(d$X) & X <= max(d$X)) %>%
+    left_join(d, by = "X")
+
   # join covariate data.
   if(!is.null(covariate_data())){
     covariate_cols = setdiff(colnames(covariate_data()), "X")
