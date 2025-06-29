@@ -91,7 +91,7 @@ ui = dashboardPage(
           selectInput('graphPeriods','Graph Periods',choices=sort(c('Annually','Monthly','Quarterly','Weekly'))),
           conditionalPanel(
             condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
-            selectInput('cV','Color by',choices=NULL)
+            selectInput('colorBy','Color by',choices=NULL)
           ),
           selectInput('selectedCovariates', 'Add Covariates', choices = NULL),
           uiOutput("lineplot", height = 400)

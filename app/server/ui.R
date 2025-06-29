@@ -41,7 +41,7 @@ observeEvent(
       color_choices
     }
     
-    updateSelectInput(session,'cV',
+    updateSelectInput(session,'colorBy',
                       choices=color_choices,
                       selected='None')
   })

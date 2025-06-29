@@ -3,11 +3,11 @@ mainplot_data = reactive({
   req(input$actor)
   req(input$graphPeriods)
   req(dataPlot())
-  req(input$cV)
+  req(input$colorBy)
 
   # Extract input values. 
   # I set these up here to make it clear which ones are used below, and also to avoid repetitive input$ calls.
-  cV = input$cV
+  colorBy = input$colorBy
   chooseData = input$chooseData
   casualtyType = input$casualtyType
   actor = input$actor
@@ -38,7 +38,7 @@ mainplot_data = reactive({
   # Identify the column(s) we'll be summing.
   sum_cols = if(chooseData == 'Casualties'){
     if(casualtyType == 'All'){
-      if (cV == 'Casualty Type') {
+      if (colorBy == 'Casualty Type') {
         c("Killed", "Injured")
       } else {
         c("Casualties")
@@ -69,7 +69,7 @@ mainplot_data = reactive({
   }
 
   # Special handling for `Type of Action`.
-  if(cV=='Type of Action'){
+  if(colorBy=='Type of Action'){
 
     # Loop over each input$selectedActionTypes selection and create a metric column that can be used later for plotting.
     for(crime in input$selectedActionTypes){
@@ -93,10 +93,10 @@ mainplot_data = reactive({
     "))
 
     # Identify columns we'll be grouping by.
-    group_cols = if(cV %in% c('None', 'Casualty Type')) {
+    group_cols = if(colorBy %in% c('None', 'Casualty Type')) {
       c('X')
     } else {
-      c('X', cV)
+      c('X', colorBy)
     }
 
   }
@@ -198,7 +198,7 @@ output$lineplot = renderUI({
   req(mainplot_data())
   
   d = mainplot_data()
-  cV = input$cV
+  colorBy = input$colorBy
 
   # join covariate data.
   if(!is.null(covariate_data())){
