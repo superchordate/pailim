@@ -25,14 +25,18 @@ observeEvent(
     input$tab
     input$chooseData
     input$casualtyType
+    input$actor
   },{
+
+    req(input$actor)
+    req(input$chooseData)    
     
     if(input$actor=='Both'){
       color_choices = c('None', 'Palestine/Israel', 'Type of Action')
     } else if (input$actor=='Palestinian Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator.Origin','Region')
+      color_choices = c('None', 'Type of Action', 'Perpetrator.Origin', 'Region', "District")
     } else if (input$actor=='Israeli Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator.Type','City')
+      color_choices = c('None', 'Type of Action', 'Perpetrator.Type', "Area", 'City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){

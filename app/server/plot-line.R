@@ -20,7 +20,7 @@ mainplot_data = reactive({
 
   # Add Events count (just 1 per row).
   d$Events = 1
-  d$Riots = str_detect(d$`Type of Action`, "\\bRiot\\b") * 1
+  if("Type of Action" %in% colnames(d)) d$Riots = str_detect(d$`Type of Action`, "\\bRiot\\b") * 1
 
   # Set up the periods.
   d$X = if(graphPeriods == 'Annually') {
