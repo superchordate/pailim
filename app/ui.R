@@ -54,7 +54,7 @@ ui = dashboardPage(
       "Get Codebook"
     ),
     tags$a(
-      href = "https://storage.googleapis.com/pailim-public/pailim-data.zip", 
+      href = "https://docs.google.com/forms/d/e/1FAIpQLSdNtT3-43qJkrT28MI_3GIowBwgL6H0HWEuBLVKB10QgGAF1g/viewform?usp=dialog", 
       target = "_blank", 
       class = "btn btn-default", 
       icon("download"), 
