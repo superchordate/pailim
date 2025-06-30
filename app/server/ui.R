@@ -135,8 +135,8 @@ output$dynamic_inputs = renderUI({
     
         pickerInput(
           'selectedActionTypes', 'Type of Action',
-          choices = options$`Type of Action`,
-          selected = options$`Type of Action`, 
+          choices = options$`Type of Action: cm`,
+          selected = options$`Type of Action: cm`, 
           multiple = TRUE,
           options = list(
             `actions-box` = TRUE,
