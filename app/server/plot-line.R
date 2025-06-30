@@ -186,37 +186,30 @@ covariate_data = reactive({
   d %<>% mutate(Goods = Total.Imports.Gaza.Israel / Total.Exports.Gaza.Israel)
   d$Goods[is.infinite(d$Goods)] <- NA
 
+  # Convert to data.table for faster grouped operations
+  setDT(d)
+  
+  # Define columns to aggregate
+  agg_cols = c(
+    'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
+    'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
+    'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
+    'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
+    'Goods'
+  )
+  
   if(is_time_based) {
     # For time-based charts, group by time period
-    d %<>% 
-      summarise(across(all_of(c(
-        'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
-        'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
-        'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
-        'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
-        'Goods'
-      )), mean, na.rm = TRUE), .by = X)
+    d = d[, lapply(.SD, mean, na.rm = TRUE), by = X, .SDcols = agg_cols]
   } else {
     # For geographical charts, first group by Date and X to get daily averages per location,
     # then group by X to get overall averages per location
-    d %<>% 
-      group_by(Date, X) %>%
-      summarise(across(all_of(c(
-        'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
-        'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
-        'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
-        'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
-        'Goods'
-      )), mean, na.rm = TRUE), .groups = 'drop') %>%
-      group_by(X) %>%
-      summarise(across(all_of(c(
-        'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
-        'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
-        'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
-        'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
-        'Goods'
-      )), mean, na.rm = TRUE), .groups = 'drop')
+    d = d[, lapply(.SD, mean, na.rm = TRUE), by = .(Date, X), .SDcols = agg_cols]
+    d = d[, lapply(.SD, mean, na.rm = TRUE), by = X, .SDcols = agg_cols]
   }
+  
+  # Convert back to data.frame for compatibility with rest of code
+  d = as.data.frame(d)
 
   # Select Z and Y.
   covariate_selection = list(
@@ -334,8 +327,13 @@ output$lineplot = renderUI({
       dataLabels = list(enabled = FALSE)
     )
   } else {
+    # Check if we should stack columns (when Color By is selected and we have multiple series)
+    non_covariate_series = setdiff(colnames(d), c("X", if(!is.null(covariate_data())) setdiff(colnames(covariate_data()), "X") else c()))
+    should_stack = colorBy != 'None' && length(non_covariate_series) > 1
+    
     chart_options$plotOptions$column = list(
-      dataLabels = list(enabled = FALSE)
+      dataLabels = list(enabled = FALSE),
+      stacking = if(should_stack) "normal" else NULL
     )
   }
   
@@ -355,12 +353,21 @@ output$lineplot = renderUI({
       data_points
     }
     
-    chart_options$series[[length(chart_options$series) + 1]] = list(
+    # Determine if this series should be stacked
+    is_covariate = col %in% covariate_cols
+    series_config = list(
       name = col,
       data = series_data,
-      dashStyle = if(col %in% covariate_cols) "Dot" else "Solid",
-      yAxis = if(col %in% covariate_cols) 1 else 0
+      dashStyle = if(is_covariate) "Dot" else "Solid",
+      yAxis = if(is_covariate) 1 else 0
     )
+    
+    # Add stack property for non-covariate series in column charts when Color By is selected
+    if(chart_type == 'column' && !is_covariate && colorBy != 'None') {
+      series_config$stack = 'main'
+    }
+    
+    chart_options$series[[length(chart_options$series) + 1]] = series_config
   }
 
   # Enable tooltips with custom format showing X and Y values with labels
