@@ -23,30 +23,39 @@ mainplot_data = reactive({
   if("Type of Action" %in% colnames(d)) d$Riots = str_detect(d$`Type of Action`, "\\bRiot\\b") * 1
 
   # Set up the X variable based on axis selection.
-  d$X = if(xAxis == 'Year') {
-    d$Year
-  } else if(xAxis == 'Month') {
-    paste0(d$Year, '_', pad0(d$MonthNum, 2))
-  } else if(xAxis == 'Quarter') {
-    paste0(d$Year, '_', d$Quarter)
-  } else if(xAxis == 'Week') {
-    paste0(d$Year, '_', pad0(d$Week, 2))
-  } else if(xAxis == 'District') {
-    d$District
-  } else if(xAxis == 'Region') {
-    d$Region
-  } else if(xAxis == 'Area') {
-    d$Area
-  } else if(xAxis == 'City') {
-    d$City
-  } else if(xAxis == 'Type of Action') {
-    d$`Type of Action`
-  } else if(xAxis == 'Perpetrator Origin' && actor == 'Palestinian Actions') {
-    d$`Perpetrator Origin`
-  } else if(xAxis == 'Perpetrator Type' && actor == 'Israeli Actions') {
-    d$`Perpetrator Type`
+  if(xAxis == 'Type of Action') {
+    # Special handling for Type of Action: split semicolon-separated values
+    # Create separate rows for each action type in the semicolon-separated list
+    d = d %>%
+      separate_rows(`Type of Action`, sep = ";") %>%
+      mutate(`Type of Action` = str_trim(`Type of Action`)) %>%
+      filter(!is.na(`Type of Action`) & `Type of Action` != "")
+    
+    d$X = d$`Type of Action`
   } else {
-    stop(glue("mainplot_data: Unhandled case for xAxis: {xAxis}"))
+    d$X = if(xAxis == 'Year') {
+      d$Year
+    } else if(xAxis == 'Month') {
+      paste0(d$Year, '_', pad0(d$MonthNum, 2))
+    } else if(xAxis == 'Quarter') {
+      paste0(d$Year, '_', d$Quarter)
+    } else if(xAxis == 'Week') {
+      paste0(d$Year, '_', pad0(d$Week, 2))
+    } else if(xAxis == 'District') {
+      d$District
+    } else if(xAxis == 'Region') {
+      d$Region
+    } else if(xAxis == 'Area') {
+      d$Area
+    } else if(xAxis == 'City') {
+      d$City
+    } else if(xAxis == 'Perpetrator Origin' && actor == 'Palestinian Actions') {
+      d$`Perpetrator Origin`
+    } else if(xAxis == 'Perpetrator Type' && actor == 'Israeli Actions') {
+      d$`Perpetrator Type`
+    } else {
+      stop(glue("mainplot_data: Unhandled case for xAxis: {xAxis}"))
+    }
   }
 
   # Identify the column(s) we'll be summing.
