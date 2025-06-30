@@ -41,14 +41,32 @@ output$vertab = DT::renderDT(
     filter = 'top',
     options = list(
       dom = 'rtip', 
-      pageLength = 5, 
+      pageLength = 10, 
       processing = FALSE,
+      scrollX = TRUE,
+      scrollY = "400px",
+      scrollCollapse = TRUE,
+      autoWidth = TRUE,
+      responsive = TRUE,
+      columnDefs = list(
+        list(width = "60px", targets = c(0, 1)), # Year, Month - narrower
+        list(width = "100px", targets = c(2, 4, 5)), # Type, Injured, Killed
+        list(width = "120px", targets = 3), # Type of Action
+        list(width = "250px", targets = 6, className = "description-col") # Description - wider but controlled
+      ),
       initComplete = DT::JS(paste0("
         function(settings, json) {
           var filterElement = document.getElementById('filter-note-table');
           if (filterElement) {
             filterElement.innerHTML = '", gsub("'", "\\'", filter_description), "';
           }
+          
+          // Add word wrapping to description column
+          $(this.api().table().container()).find('.description-col').css({
+            'word-wrap': 'break-word',
+            'white-space': 'normal',
+            'max-width': '250px'
+          });
         }
       "))
     ),
@@ -59,11 +77,14 @@ output$vertab = DT::renderDT(
 output$vertabUI = renderUI({
   req(vertab())
   div(
-    style = "background-color: white; padding: 10px;",
+    style = "background-color: white; padding: 10px; max-height: 100dvh; overflow-y: auto;",
     div(
       class = "filter-note",
       HTML('<strong>Filters:</strong> <span id="filter-note-table">Loading...</span>')
     ),
-    DTOutput('vertab')
+    div(
+      class = "table-container",
+      DTOutput('vertab')
+    )
   )
 })

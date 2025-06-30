@@ -19,3 +19,83 @@
 .filter-note strong {
   color: #007bff;
 }
+
+/* Table container styling for mobile responsiveness */
+.table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100dvh - 200px);
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+/* DataTable styling improvements */
+.dataTables_wrapper {
+  font-size: 14px;
+}
+
+.dataTables_wrapper .dataTables_scrollBody {
+  max-height: 400px !important;
+}
+
+/* Mobile-specific table styling */
+@media (max-width: 768px) {
+  .table-container {
+    max-height: calc(100dvh - 150px);
+    font-size: 12px;
+  }
+  
+  .dataTables_wrapper {
+    font-size: 12px;
+  }
+  
+  .dataTables_wrapper .dataTables_filter input {
+    width: 100% !important;
+    margin-bottom: 5px;
+  }
+  
+  .dataTables_wrapper .dataTables_length select {
+    width: auto !important;
+  }
+  
+  .dataTables_wrapper table.dataTable thead th,
+  .dataTables_wrapper table.dataTable thead td {
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  
+  .dataTables_wrapper table.dataTable tbody td {
+    padding: 6px 8px;
+    font-size: 11px;
+    word-break: break-word;
+  }
+  
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    font-size: 11px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .table-container {
+    max-height: calc(100dvh - 120px);
+    font-size: 11px;
+  }
+  
+  .dataTables_wrapper {
+    font-size: 11px;
+  }
+  
+  .dataTables_wrapper table.dataTable thead th,
+  .dataTables_wrapper table.dataTable thead td {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+  
+  .dataTables_wrapper table.dataTable tbody td {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+}
