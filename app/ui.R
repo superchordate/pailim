@@ -10,8 +10,8 @@ ui = dashboardPage(
         icon = icon("globe")
       ),
       menuItem(
-        "Lines",
-        tabName = "Lines",
+        "Charts",
+        tabName = "Charts",
         icon = icon("bar-chart")
       ),
       div(
@@ -93,7 +93,7 @@ ui = dashboardPage(
         uiOutput('vertabUI')
       ),
       tabItem(
-        tabName = "Lines",
+        tabName = "Charts",
         div(
           selectInput('xAxis','X-Axis',choices=sort(c('Year','Month','Quarter','Week'))),
           conditionalPanel(

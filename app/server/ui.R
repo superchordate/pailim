@@ -97,11 +97,11 @@ observeEvent(input$actor, {
   time_choices = c('Year','Month','Quarter','Week')
 
   if(input$actor == 'Palestinian Actions') {
-    updated_choices = c(time_choices, 'District', 'Region')
+    updated_choices = c(time_choices, 'District', 'Region', 'Type of Action', 'Perpetrator.Origin')
   } else if(input$actor == 'Israeli Actions') {
-    updated_choices = c(time_choices, 'Area', 'City')
+    updated_choices = c(time_choices, 'Area', 'City', 'Type of Action', 'Perpetrator.Type')
   } else {
-    updated_choices = time_choices
+    updated_choices = c(time_choices, 'Type of Action')
   }
   
   updateSelectInput(session, 'xAxis',
