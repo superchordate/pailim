@@ -95,7 +95,7 @@ ui = dashboardPage(
       tabItem(
         tabName = "Lines",
         div(
-          selectInput('graphPeriods','Graph Periods',choices=sort(c('Annually','Monthly','Quarterly','Weekly'))),
+          selectInput('xAxis','X-Axis',choices=sort(c('Year','Month','Quarter','Week'))),
           conditionalPanel(
             condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
             selectInput('colorBy','Color by',choices=NULL)

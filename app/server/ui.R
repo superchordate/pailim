@@ -1,4 +1,3 @@
-
 observeEvent(input$resetAll, {
   reset("form")
 })
@@ -55,7 +54,7 @@ observeEvent(
 observeEvent(
   {
     input$actor
-    input$graphPeriods
+    input$xAxis
   },{
     #req(input$tab=="lines")
     
@@ -67,22 +66,22 @@ observeEvent(
     updated_choices=NULL
     
     if(input$actor=='Both' | input$actor=='Palestinian Actions' | input$actor=='Israeli Actions'){
-      if(input$graphPeriods=='Annually'){
-        updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
-                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
-                          'Stock Market Index','Temperature','Trade Balance','Unemployment')
-            } else if (input$graphPeriods=='Quarterly'){
+      if (input$xAxis=='Quarter'){
             updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
                           'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
                           'Stock Market Index','Temperature','Trade Balance','Unemployment')
-            } else if (input$graphPeriods=='Monthly'){
+      } else if (input$xAxis=='Month'){
             updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
                           'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
                           'Stock Market Index','Temperature','Trade Balance')
-            } else if (input$graphPeriods=='Weekly'){
+      } else if (input$xAxis=='Week'){
             updated_choices = c('None','Exchange Rate','Hamas-Fatah Reconciliation Talks','Home Demolitions by Israel',
                           'Israeli Coalition Size','Israeli Operation','Rainfall','Stock Market Index',
                           'Temperature','UN Vote','US-Israel State Visits')
+      } else {
+            updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
+                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
+                          'Stock Market Index','Temperature','Trade Balance','Unemployment')
       }
     } else if (input$actor=='Both') {
       updated_choices = 'None'
@@ -92,6 +91,24 @@ observeEvent(
                       choices=updated_choices,
                       selected='None')
   })
+# Update X-Axis choices based on actor selection
+observeEvent(input$actor, {
+
+  time_choices = c('Year','Month','Quarter','Week')
+
+  if(input$actor == 'Palestinian Actions') {
+    updated_choices = c(time_choices, 'District', 'Region')
+  } else if(input$actor == 'Israeli Actions') {
+    updated_choices = c(time_choices, 'Area', 'City')
+  } else {
+    updated_choices = time_choices
+  }
+  
+  updateSelectInput(session, 'xAxis',
+                    choices = updated_choices,
+                    selected = if(input$xAxis %in% updated_choices) input$xAxis else 'Year')
+})
+
 # general dropdowns on sidebar
 output$dynamic_inputs = renderUI({
   tagList(

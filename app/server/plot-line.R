@@ -1,7 +1,7 @@
 mainplot_data = reactive({
 
   req(input$actor)
-  req(input$graphPeriods)
+  req(input$xAxis)
   req(dataPlot())
   req(input$colorBy)
 
@@ -11,7 +11,7 @@ mainplot_data = reactive({
   chooseData = input$chooseData
   casualtyType = input$casualtyType
   actor = input$actor
-  graphPeriods = input$graphPeriods
+  xAxis = input$xAxis
   riot.sub = input$riot.sub
   primary.violence = input$primary.violence
   
@@ -22,18 +22,26 @@ mainplot_data = reactive({
   d$Events = 1
   if("Type of Action" %in% colnames(d)) d$Riots = str_detect(d$`Type of Action`, "\\bRiot\\b") * 1
 
-  # Set up the periods.
-  d$X = if(graphPeriods == 'Annually') {
+  # Set up the X variable based on axis selection.
+  d$X = if(xAxis == 'Year') {
     d$Year
-  } else if(graphPeriods == 'Monthly') {
+  } else if(xAxis == 'Month') {
     paste0(d$Year, '_', pad0(d$MonthNum, 2))
-  } else if(graphPeriods == 'Quarterly') {
+  } else if(xAxis == 'Quarter') {
     paste0(d$Year, '_', d$Quarter)
-  } else if(graphPeriods == 'Weekly') {
+  } else if(xAxis == 'Week') {
     paste0(d$Year, '_', pad0(d$Week, 2))
+  } else if(xAxis == 'District') {
+    d$District
+  } else if(xAxis == 'Region') {
+    d$Region
+  } else if(xAxis == 'Area') {
+    d$Area
+  } else if(xAxis == 'City') {
+    d$City
   } else {
-    stop(glue("mainplot_data: Unhanded case for graphPeriods: {graphPeriods}"))
-  }  
+    stop(glue("mainplot_data: Unhandled case for xAxis: {xAxis}"))
+  }
 
   # Identify the column(s) we'll be summing.
   sum_cols = if(chooseData == 'Casualties'){
@@ -108,7 +116,7 @@ mainplot_data = reactive({
     )
   }
 
-  # Apply grouping and summing. 
+  # Apply grouping and summing.
   d %<>% 
     group_by(across(all_of(group_cols))) %>% 
     summarise(across(all_of(sum_cols), sum, na.rm = TRUE), .groups = 'drop')
@@ -132,26 +140,31 @@ covariate_data = reactive({
   if(is.null(input$selectedCovariates) || input$selectedCovariates == 'None') {
     return(NULL)
   }
+  
+  # Only provide covariate data for time-based X-axis
+  if(!input$xAxis %in% c('Year', 'Month', 'Quarter', 'Week')) {
+    return(NULL)
+  }
 
   # Extract input values. 
   # I set these up here to make it clear which ones are used below, and also to avoid repetitive input$ calls.
   selectedCovariates = input$selectedCovariates
-  graphPeriods = input$graphPeriods
+  xAxis = input$xAxis
   
   # Filter to original records, exclude rows added to represent additional locations within a single record.
   d = dataPlot() %>% filter(Add == 0)
 
   # Set up the periods.
-  d$X = if(graphPeriods == 'Annually') {
+  d$X = if(xAxis == 'Year') {
     d$Year
-  } else if(graphPeriods == 'Monthly') {
+  } else if(xAxis == 'Month') {
     paste0(d$Year, '_', pad0(d$MonthNum, 2))
-  } else if(graphPeriods == 'Quarterly') {
+  } else if(xAxis == 'Quarter') {
     paste0(d$Year, '_', d$Quarter)
-  } else if(graphPeriods == 'Weekly') {
+  } else if(xAxis == 'Week') {
     paste0(d$Year, '_', pad0(d$Week, 2))
   } else {
-    stop(glue("mainplot_data: Unhanded case for graphPeriods: {graphPeriods}"))
+    stop(glue("covariate_data: Unhandled case for xAxis: {xAxis}"))
   }
 
   # Calculate Goods.
@@ -199,35 +212,54 @@ output$lineplot = renderUI({
   
   d = mainplot_data()
   colorBy = input$colorBy
+  xAxis = input$xAxis
+  
+  # Determine if this is a time-based or geographical chart
+  is_time_based = xAxis %in% c('Year', 'Month', 'Quarter', 'Week')
+  chart_type = if(is_time_based) 'line' else 'column'
 
-  # add missing periods. 
-  d = all_periods[[input$graphPeriods]] %<>% 
-    filter(X >= min(d$X) & X <= max(d$X)) %>%
-    left_join(d, by = "X")
-
-  # join covariate data.
-  if(!is.null(covariate_data())){
-    covariate_cols = setdiff(colnames(covariate_data()), "X")
-    d = left_join(d, covariate_data(), by = "X")
+  # For time-based charts, add missing periods and join covariate data
+  if(is_time_based) {
+    
+    # add missing periods. 
+    d = all_periods[[xAxis]] %<>% 
+      filter(X >= min(d$X) & X <= max(d$X)) %>%
+      left_join(d, by = "X")
+    
+    # join covariate data.
+    if(!is.null(covariate_data())){
+      covariate_cols = setdiff(colnames(covariate_data()), "X")
+      d = left_join(d, covariate_data(), by = "X")
+    } else {
+      covariate_cols = c()
+    }
   } else {
+    # For geographical charts, remove rows with missing X values
+    d = d %>% filter(!is.na(X) & X != "")
     covariate_cols = c()
   }
 
   x_title = c(
-    `Annually` = 'Year',
-    `Monthly` = 'Year_Month',
-    `Quarterly` = 'Year_Quarter',
-    `Weekly` = 'Year_Week'
-  )[[input$graphPeriods]]
+    `Year` = 'Year',
+    `Month` = 'Year_Month',
+    `Quarter` = 'Year_Quarter',
+    `Week` = 'Year_Week',
+    `District` = 'District',
+    `Region` = 'Region',
+    `Area` = 'Area',
+    `City` = 'City'
+  )[[input$xAxis]]
 
-  # convert X to numeric. 
+  # For time-based charts, convert X to numeric, for geographical keep as categorical
   xvals = unique(d$X)
-  d$X = as.numeric(factor(d$X, levels = xvals, ordered = TRUE)) - 1
+  if(is_time_based) {
+    d$X = as.numeric(factor(d$X, levels = xvals, ordered = TRUE)) - 1
+  }
 
   # Base options for Highcharts
   chart_options = list(
     chart = list(
-      type = 'line',
+      type = chart_type,
       events = list(
         load = hc_markjs(paste0("function() { var filterElement = document.getElementById('filter-note-line'); if (filterElement) { filterElement.innerHTML = '", filter_description, "'; }}"))
       )
@@ -244,25 +276,44 @@ output$lineplot = renderUI({
     ),
     xAxis = list(
       title = list(text = x_title),
-      type = "categorical",
+      type = if(is_time_based) "categorical" else "category",
       categories = xvals,
       endOnTick = FALSE,
       startOnTick = FALSE
     ),
-    plotOptions = list(
-      line = list(
-        dataLabels = list(enabled = FALSE)
-      )
-    ),
-    series = list()
+    plotOptions = list()
   )
   
+  # Set plotOptions based on chart type
+  if(chart_type == 'line') {
+    chart_options$plotOptions$line = list(
+      dataLabels = list(enabled = FALSE)
+    )
+  } else {
+    chart_options$plotOptions$column = list(
+      dataLabels = list(enabled = FALSE)
+    )
+  }
+  
+  # Initialize series list
+  chart_options$series = list()
+  
   # Add the applicable series. This will include everything that is not X. 
-  series = list()
   for(col in setdiff(colnames(d), "X")){
+    series_data = if(is_time_based) {
+      d[[col]]
+    } else {
+      # For geographical charts, create data points with proper formatting
+      data_points = list()
+      for(i in 1:nrow(d)) {
+        data_points[[i]] = list(name = d$X[i], y = d[[col]][i])
+      }
+      data_points
+    }
+    
     chart_options$series[[length(chart_options$series) + 1]] = list(
       name = col,
-      data = d[[col]],
+      data = series_data,
       dashStyle = if(col %in% covariate_cols) "Dot" else "Solid",
       yAxis = if(col %in% covariate_cols) 1 else 0
     )

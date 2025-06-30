@@ -24,10 +24,10 @@ options = list(
 
 # full mappings for line plots.
 all_periods = list(
-    `Annually` = data.frame(X = unique(cm$Year)),
-    `Monthly` = data.frame(X = unique(paste0(cm$Year, '_', pad0(cm$MonthNum, 2)))),
-    `Quarterly` = data.frame(X = unique(paste0(cm$Year, '_', cm$Quarter))),
-    `Weekly` = data.frame(X = unique(paste0(cm$Year, '_', pad0(cm$Week, 2))))
+    `Year` = data.frame(X = unique(cm$Year)),
+    `Month` = data.frame(X = unique(paste0(cm$Year, '_', pad0(cm$MonthNum, 2)))),
+    `Quarter` = data.frame(X = unique(paste0(cm$Year, '_', cm$Quarter))),
+    `Week` = data.frame(X = unique(paste0(cm$Year, '_', pad0(cm$Week, 2))))
 )
 
 #save(list = c('pa', 'il', 'cm', 'options'), file = '../app/data.RData')

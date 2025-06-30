@@ -7,7 +7,7 @@
         "Add", "Year", "Month", "Date", "Week", "MonthNum", "Quarter",
         
         # Geographic columns  
-        "Longitude", "Latitude",
+        "Longitude", "Latitude", "District", "Region", "Area", "City",
         
         # Casualty data
         "Casualties", "Killed", "Injured",
