@@ -28,7 +28,8 @@ observeEvent(
   },{
 
     req(input$actor)
-    req(input$chooseData)    
+    req(input$chooseData)
+    req(input$casualtyType)
     
     if(input$actor=='Both'){
       color_choices = c('None', 'Palestine/Israel', 'Type of Action')

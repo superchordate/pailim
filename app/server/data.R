@@ -22,6 +22,7 @@ dataPlot = reactive({
   req(length(input$year)>0)
   req(length(input$month)>0)
   req(input$chooseData)
+  req(input$casualtyType)
   
   # Threshold for showing individual items vs count
   display_threshold = 5

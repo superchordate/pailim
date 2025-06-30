@@ -18,7 +18,7 @@ ui = dashboardPage(
         id='form',
         selectInput('actor','Actor',choices=c('Both', 'Palestinian Actions','Israeli Actions')),
         # chooseData options will be set based on actor selection.
-        selectInput('chooseData','Choose Data',choices=NULL,selected=NULL),
+        selectInput('chooseData','Choose Data', choices = c("Casualties", "Events"), selected = "Events"),
         # year and month.        
         pickerInput('year','Select Year',choices=options$Year,selected=tail(options$Year, 5),multiple=TRUE,
                     options = list(
