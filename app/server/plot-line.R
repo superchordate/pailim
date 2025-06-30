@@ -140,46 +140,83 @@ covariate_data = reactive({
   if(is.null(input$selectedCovariates) || input$selectedCovariates == 'None') {
     return(NULL)
   }
-  
-  # Only provide covariate data for time-based X-axis
-  if(!input$xAxis %in% c('Year', 'Month', 'Quarter', 'Week')) {
-    return(NULL)
-  }
 
   # Extract input values. 
-  # I set these up here to make it clear which ones are used below, and also to avoid repetitive input$ calls.
   selectedCovariates = input$selectedCovariates
   xAxis = input$xAxis
   
   # Filter to original records, exclude rows added to represent additional locations within a single record.
   d = dataPlot() %>% filter(Add == 0)
 
-  # Set up the periods.
-  d$X = if(xAxis == 'Year') {
-    d$Year
-  } else if(xAxis == 'Month') {
-    paste0(d$Year, '_', pad0(d$MonthNum, 2))
-  } else if(xAxis == 'Quarter') {
-    paste0(d$Year, '_', d$Quarter)
-  } else if(xAxis == 'Week') {
-    paste0(d$Year, '_', pad0(d$Week, 2))
+  # Determine if this is a time-based or geographical chart
+  is_time_based = xAxis %in% c('Year', 'Month', 'Quarter', 'Week')
+
+  if(is_time_based) {
+    # Set up the time periods for time-based charts
+    d$X = if(xAxis == 'Year') {
+      d$Year
+    } else if(xAxis == 'Month') {
+      paste0(d$Year, '_', pad0(d$MonthNum, 2))
+    } else if(xAxis == 'Quarter') {
+      paste0(d$Year, '_', d$Quarter)
+    } else if(xAxis == 'Week') {
+      paste0(d$Year, '_', pad0(d$Week, 2))
+    } else {
+      stop(glue("covariate_data: Unhandled case for xAxis: {xAxis}"))
+    }
   } else {
-    stop(glue("covariate_data: Unhandled case for xAxis: {xAxis}"))
+    # For geographical charts, we need to group by both geography and date to get daily averages
+    # Use the existing Date column
+    
+    # Set up the geographical grouping
+    d$X = if(xAxis == 'District') {
+      d$District
+    } else if(xAxis == 'Region') {
+      d$Region
+    } else if(xAxis == 'Area') {
+      d$Area
+    } else if(xAxis == 'City') {
+      d$City
+    } else {
+      stop(glue("covariate_data: Unhandled geographical case for xAxis: {xAxis}"))
+    }
   }
 
   # Calculate Goods.
   d %<>% mutate(Goods = Total.Imports.Gaza.Israel / Total.Exports.Gaza.Israel)
   d$Goods[is.infinite(d$Goods)] <- NA
 
-  # Calculate all the covariates.
-  d %<>% 
-    summarise(across(all_of(c(
-      'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
-      'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
-      'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
-      'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
-      'Goods'
-    )), mean, na.rm = TRUE), .by = X)
+  if(is_time_based) {
+    # For time-based charts, group by time period
+    d %<>% 
+      summarise(across(all_of(c(
+        'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
+        'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
+        'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
+        'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
+        'Goods'
+      )), mean, na.rm = TRUE), .by = X)
+  } else {
+    # For geographical charts, first group by Date and X to get daily averages per location,
+    # then group by X to get overall averages per location
+    d %<>% 
+      group_by(Date, X) %>%
+      summarise(across(all_of(c(
+        'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
+        'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
+        'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
+        'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
+        'Goods'
+      )), mean, na.rm = TRUE), .groups = 'drop') %>%
+      group_by(X) %>%
+      summarise(across(all_of(c(
+        'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
+        'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
+        'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
+        'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
+        'Goods'
+      )), mean, na.rm = TRUE), .groups = 'drop')
+  }
 
   # Select Z and Y.
   covariate_selection = list(
@@ -234,9 +271,16 @@ output$lineplot = renderUI({
       covariate_cols = c()
     }
   } else {
-    # For geographical charts, remove rows with missing X values
+    # For geographical charts, remove rows with missing X values and join covariate data
     d = d %>% filter(!is.na(X) & X != "")
-    covariate_cols = c()
+    
+    # join covariate data for geographical charts
+    if(!is.null(covariate_data())){
+      covariate_cols = setdiff(colnames(covariate_data()), "X")
+      d = left_join(d, covariate_data(), by = "X")
+    } else {
+      covariate_cols = c()
+    }
   }
 
   x_title = c(

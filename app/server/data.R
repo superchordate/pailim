@@ -134,7 +134,7 @@ dataPlot = reactive({
     "Longitude", "Latitude", "Palestine/Israel",
     
     # Temporal columns for line plotting and table
-    "Year", "Month", "MonthNum", "Quarter", "Week", "Add",
+    "Year", "Month", "MonthNum", "Quarter", "Week", "Add", "Date",
     
     # Data columns displayed in maps and line plots
     "Casualties", "Killed", "Injured", "Detained.Arrested", 
