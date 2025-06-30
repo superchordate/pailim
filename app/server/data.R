@@ -23,6 +23,9 @@ dataPlot = reactive({
   req(length(input$month)>0)
   req(input$chooseData)
   
+  # Threshold for showing individual items vs count
+  display_threshold = 5
+  
   # Build filter description and update UI notes
   filter_parts = c()
   
@@ -34,22 +37,10 @@ dataPlot = reactive({
     filter(Month %in% input$month)
   
   # Year filter description
-  if(length(input$year) == length(options$Year)) {
-    filter_parts = c(filter_parts, "Years: All")
-  } else if(length(input$year) <= 5) {
-    filter_parts = c(filter_parts, paste("Years:", paste(input$year, collapse = ", ")))
-  } else {
-    filter_parts = c(filter_parts, paste("Years:", length(input$year), "selected"))
-  }
+  filter_parts = c(filter_parts, format_year_filter(input$year, display_threshold))
   
   # Month filter description
-  if(length(input$month) == 12) {
-    filter_parts = c(filter_parts, "Months: All")
-  } else if(length(input$month) <= 4) {
-    filter_parts = c(filter_parts, paste("Months:", paste(input$month, collapse = ", ")))
-  } else {
-    filter_parts = c(filter_parts, paste("Months:", length(input$month), "selected"))
-  }
+  filter_parts = c(filter_parts, format_month_filter(input$month, display_threshold))
 
   # apply `Type of Action` filter.
   # this data field has ;-separated values so filtering is a bit tricky.
@@ -73,11 +64,7 @@ dataPlot = reactive({
       }
       
       # Action types filter description
-      if(length(input$selectedActionTypes) <= 5) {
-        filter_parts = c(filter_parts, paste("Action Types:", paste(input$selectedActionTypes, collapse = ", ")))
-      } else {
-        filter_parts = c(filter_parts, paste("Action Types:", length(input$selectedActionTypes), "selected"))
-      }
+      filter_parts = c(filter_parts, format_generic_filter(input$selectedActionTypes, "Action Types", display_threshold))
   }
 
   # Inputs specific to Palestinian data.
@@ -86,20 +73,12 @@ dataPlot = reactive({
     if(length(input$perpetrator.origin) > 0) {
       d %<>% filter(Perpetrator.Origin %in% input$perpetrator.origin)
       # Perpetrator origin filter description
-      if(length(input$perpetrator.origin) <= 5) {
-        filter_parts = c(filter_parts, paste("Origin:", paste(input$perpetrator.origin, collapse = ", ")))
-      } else {
-        filter_parts = c(filter_parts, paste("Origin:", length(input$perpetrator.origin), "selected"))
-      }
+      filter_parts = c(filter_parts, format_generic_filter(input$perpetrator.origin, "Origin", display_threshold))
     }
     if(length(input$region) > 0) {
       d %<>% filter(Region %in% input$region)
       # Region filter description
-      if(length(input$region) <= 5) {
-        filter_parts = c(filter_parts, paste("Region:", paste(input$region, collapse = ", ")))
-      } else {
-        filter_parts = c(filter_parts, paste("Region:", length(input$region), "selected"))
-      }
+      filter_parts = c(filter_parts, format_generic_filter(input$region, "Region", display_threshold))
     }
 
   # Inputs specific to Israeli data.    
@@ -108,20 +87,12 @@ dataPlot = reactive({
     if(length(input$perpetrator.type) > 0) {
       d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
       # Perpetrator type filter description
-      if(length(input$perpetrator.type) <= 5) {
-        filter_parts = c(filter_parts, paste("Perpetrator Type:", paste(input$perpetrator.type, collapse = ", ")))
-      } else {
-        filter_parts = c(filter_parts, paste("Perpetrator Type:", length(input$perpetrator.type), "selected"))
-      }
+      filter_parts = c(filter_parts, format_generic_filter(input$perpetrator.type, "Perpetrator Type", display_threshold))
     }
     if(length(input$gover) > 0) {
       d %<>% filter(City %in% input$gover) 
       # Cities filter description
-      if(length(input$gover) <= 5) {
-        filter_parts = c(filter_parts, paste("Cities:", paste(input$gover, collapse = ", ")))
-      } else {
-        filter_parts = c(filter_parts, paste("Cities:", length(input$gover), "selected"))
-      }
+      filter_parts = c(filter_parts, format_generic_filter(input$gover, "Cities", display_threshold))
     }
     
   }
@@ -153,11 +124,7 @@ dataPlot = reactive({
     )
     # Riots filter description
     if(!is.null(input$riot.sub) && length(input$riot.sub) > 0) {
-      if(length(input$riot.sub) <= 5) {
-        filter_parts = c(filter_parts, paste("Riot Types:", paste(input$riot.sub, collapse = ", ")))
-      } else {
-        filter_parts = c(filter_parts, paste("Riot Types:", length(input$riot.sub), "selected"))
-      }
+      filter_parts = c(filter_parts, format_generic_filter(input$riot.sub, "Riot Types", display_threshold))
     }
   }
 
