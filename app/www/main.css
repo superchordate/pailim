@@ -38,7 +38,20 @@
   max-height: 400px !important;
 }
 
-/* Mobile-specific table styling */
+/* Chart container styling for mobile responsiveness */
+.chart-container {
+  overflow-x: auto;
+  width: 100%;
+  min-width: 800px;
+}
+
+/* Highcharts container styling */
+#chartplot {
+  min-width: 800px;
+  width: 100%;
+}
+
+/* Mobile-specific table and chart styling */
 @media (max-width: 768px) {
   .table-container {
     max-height: calc(100dvh - 150px);
@@ -75,6 +88,17 @@
   .dataTables_wrapper .dataTables_paginate {
     font-size: 11px;
   }
+  
+  /* Ensure chart container scrolls horizontally when needed */
+  .chart-container {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  /* Force minimum width on small screens */
+  #chartplot {
+    min-width: 600px !important;
+  }
 }
 
 /* Extra small screens */
@@ -97,5 +121,14 @@
   .dataTables_wrapper table.dataTable tbody td {
     padding: 4px 6px;
     font-size: 10px;
+  }
+  
+  .chart-container {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  #chartplot {
+    min-width: 600px !important;
   }
 }

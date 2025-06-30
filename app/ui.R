@@ -102,12 +102,15 @@ ui = dashboardPage(
           ),
           selectInput('selectedCovariates', 'Add Covariates', choices = NULL),
           div(
-            style = "background-color: white; padding: 10px; ",
+            style = "background-color: white; padding: 10px; overflow-x: auto; ",
             div(
               class = "filter-note",
               HTML('<strong>Filters:</strong> <span id="filter-note-line">Loading...</span>')
             ),
-            uiOutput("chartplot", height = 400)
+            div(
+              class = "chart-container",
+              uiOutput("chartplot", height = 400)
+            )
           )
         )
       )
