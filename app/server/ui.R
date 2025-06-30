@@ -33,9 +33,9 @@ observeEvent(
     if(input$actor=='Both'){
       color_choices = c('None', 'Palestine/Israel', 'Type of Action')
     } else if (input$actor=='Palestinian Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator.Origin', 'Region', "District")
+      color_choices = c('None', 'Type of Action', 'Perpetrator Origin', 'Region', "District")
     } else if (input$actor=='Israeli Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator.Type', "Area", 'City')
+      color_choices = c('None', 'Type of Action', 'Perpetrator Type', "Area", 'City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){
@@ -97,9 +97,9 @@ observeEvent(input$actor, {
   time_choices = c('Year','Month','Quarter','Week')
 
   if(input$actor == 'Palestinian Actions') {
-    updated_choices = c(time_choices, 'District', 'Region', 'Type of Action', 'Perpetrator.Origin')
+    updated_choices = c(time_choices, 'District', 'Region', 'Type of Action', 'Perpetrator Origin')
   } else if(input$actor == 'Israeli Actions') {
-    updated_choices = c(time_choices, 'Area', 'City', 'Type of Action', 'Perpetrator.Type')
+    updated_choices = c(time_choices, 'Area', 'City', 'Type of Action', 'Perpetrator Type')
   } else {
     updated_choices = c(time_choices, 'Type of Action')
   }
@@ -146,7 +146,7 @@ output$dynamic_inputs = renderUI({
        # Inputs specific to Israeli data.
       conditionalPanel(
         condition="input.actor=='Israeli Actions'",
-        pickerInput('perpetrator.type','Perpetrator Type',choices=sort(na.omit(unique(d()$Perpetrator.Type))),selected=na.omit(unique(d()$Perpetrator.Type)),multiple=TRUE,
+        pickerInput('perpetrator.type','Perpetrator Type',choices=sort(na.omit(unique(d()$`Perpetrator Type`))),selected=na.omit(unique(d()$`Perpetrator Type`)),multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
                       `deselect-all-text` = "None",
@@ -164,7 +164,7 @@ output$dynamic_inputs = renderUI({
       # Inputs specific to Palestinian data.
       conditionalPanel(
         condition="input.actor=='Palestinian Actions'",
-        pickerInput('perpetrator.origin','Perpetrator Origin',choices=sort(na.omit(unique(d()$Perpetrator.Origin))),selected=na.omit(unique(d()$Perpetrator.Origin)),multiple=TRUE,
+        pickerInput('perpetrator.origin','Perpetrator Origin',choices=sort(na.omit(unique(d()$`Perpetrator Origin`))),selected=na.omit(unique(d()$`Perpetrator Origin`)),multiple=TRUE,
                     options = list(
                       `actions-box` = TRUE,
                       `deselect-all-text` = "None",

@@ -71,7 +71,7 @@ dataPlot = reactive({
   if(input$actor=='Palestinian Actions'){
 
     if(length(input$perpetrator.origin) > 0) {
-      d %<>% filter(Perpetrator.Origin %in% input$perpetrator.origin)
+      d %<>% filter(`Perpetrator Origin` %in% input$perpetrator.origin)
       # Perpetrator origin filter description
       filter_parts = c(filter_parts, format_generic_filter(input$perpetrator.origin, "Origin", display_threshold))
     }
@@ -85,7 +85,7 @@ dataPlot = reactive({
   } else if(input$actor=='Israeli Actions'){
     
     if(length(input$perpetrator.type) > 0) {
-      d %<>% filter(Perpetrator.Type %in% input$perpetrator.type)
+      d %<>% filter(`Perpetrator Type` %in% input$perpetrator.type)
       # Perpetrator type filter description
       filter_parts = c(filter_parts, format_generic_filter(input$perpetrator.type, "Perpetrator Type", display_threshold))
     }
@@ -144,7 +144,7 @@ dataPlot = reactive({
     "Type of Action", "Verbatim.Report",
     
     # Grouping/coloring columns used in line plots
-    "Perpetrator.Type", "Region", "City", "Victim.Type", "Perpetrator.Origin", "District", "Area",
+    "Perpetrator Type", "Region", "City", "Victim.Type", "Perpetrator Origin", "District", "Area",
     "Riot.SubCategory",
     
     # Covariate columns needed for line plot covariates

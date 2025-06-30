@@ -21,7 +21,7 @@ These datasets share many common variables while maintaining distinct characteri
 - **Filtering options**:
   - Time period (Year, Month)
   - Violence type (Primary.Violence)
-  - Perpetrator identification (Perpetrator.1-.2, Perpetrator.Origin.1-.3)
+  - Perpetrator identification (Perpetrator.1-.2, Perpetrator Origin.1-.3)
   - Victim identification (Victim.1-.4)
 
 #### 2. Casualty Mapping

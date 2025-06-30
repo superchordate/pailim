@@ -6,7 +6,7 @@ if(!cache.ok(5)){
         mutate(
             `Palestine/Israel` = 'Palestine',
             Month = factor(Month, levels = 1:12, labels = month.abb),
-            Perpetrator.Origin = fifelse(
+            `Perpetrator Origin` = fifelse(
                 !is.na(Perpetrator.Origin.2) | !is.na(Perpetrator.Origin.3),
                 'Multiple Perpetrators',
                 Perpetrator.Origin.1
@@ -17,7 +17,7 @@ if(!cache.ok(5)){
                 Victim.1
             ),
             # Recode perpetrator origin
-            Perpetrator.Origin = fifelse(Perpetrator.Origin == 'Foreign', "Abroad", Perpetrator.Origin),
+            `Perpetrator Origin` = fifelse(`Perpetrator Origin` == 'Foreign', "Abroad", `Perpetrator Origin`),
             # Recode victim types
             Victim.Type = fcase(
                 Victim.Type == 'Civilian', "Israeli Civilian",
@@ -46,14 +46,14 @@ if(!cache.ok(5)){
         mutate(
             Month = factor(Month, levels = 1:12, labels = month.abb),
             `Palestine/Israel` = 'Israel',
-            Perpetrator.Type = fifelse(!is.na(Perpetrator.2), 'Multiple Perpetrators', Perpetrator.1),
+            `Perpetrator Type` = fifelse(!is.na(Perpetrator.2), 'Multiple Perpetrators', Perpetrator.1),
             Victim.Type = fifelse(
                 !is.na(Victim.2) | !is.na(Victim.3) | !is.na(Victim.4),
                 'Multiple Victims',
                 Victim.1
             ),
             # Recode perpetrator and victim types
-            Perpetrator.Type = fifelse(Perpetrator.Type == 'Civilians', "Israeli Civilians", Perpetrator.Type),
+            `Perpetrator Type` = fifelse(`Perpetrator Type` == 'Civilians', "Israeli Civilians", `Perpetrator Type`),
             Victim.Type = fcase(
                 Victim.Type == 'PCI', "Palestinian Citizen of Israel",
                 Victim.Type == 'Palestinian Child', "Palestinian Minor",

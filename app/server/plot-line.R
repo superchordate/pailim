@@ -41,10 +41,10 @@ mainplot_data = reactive({
     d$City
   } else if(xAxis == 'Type of Action') {
     d$`Type of Action`
-  } else if(xAxis == 'Perpetrator.Origin' && actor == 'Palestinian Actions') {
-    d$Perpetrator.Origin
-  } else if(xAxis == 'Perpetrator.Type' && actor == 'Israeli Actions') {
-    d$Perpetrator.Type
+  } else if(xAxis == 'Perpetrator Origin' && actor == 'Palestinian Actions') {
+    d$`Perpetrator Origin`
+  } else if(xAxis == 'Perpetrator Type' && actor == 'Israeli Actions') {
+    d$`Perpetrator Type`
   } else {
     stop(glue("mainplot_data: Unhandled case for xAxis: {xAxis}"))
   }
@@ -185,10 +185,10 @@ covariate_data = reactive({
       d$City
     } else if(xAxis == 'Type of Action') {
       d$`Type of Action`
-    } else if(xAxis == 'Perpetrator.Origin') {
-      d$Perpetrator.Origin
-    } else if(xAxis == 'Perpetrator.Type') {
-      d$Perpetrator.Type
+    } else if(xAxis == 'Perpetrator Origin') {
+      d$`Perpetrator Origin`
+    } else if(xAxis == 'Perpetrator Type') {
+      d$`Perpetrator Type`
     } else {
       stop(glue("covariate_data: Unhandled geographical case for xAxis: {xAxis}"))
     }
@@ -298,8 +298,8 @@ output$lineplot = renderUI({
     `Area` = 'Area',
     `City` = 'City',
     `Type of Action` = 'Type of Action',
-    `Perpetrator.Origin` = 'Perpetrator Origin',
-    `Perpetrator.Type` = 'Perpetrator Type'
+    `Perpetrator Origin` = 'Perpetrator Origin',
+    `Perpetrator Type` = 'Perpetrator Type'
   )[[input$xAxis]]
 
   # For time-based charts, convert X to numeric, for geographical keep as categorical
