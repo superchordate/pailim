@@ -39,12 +39,31 @@ vertab = reactive({
 output$vertab = DT::renderDT(
     vertab(),
     filter = 'top',
-    options = list(dom = 'frtip', pageLength = 5, processing = FALSE),
+    options = list(
+      dom = 'rtip', 
+      pageLength = 5, 
+      processing = FALSE,
+      initComplete = DT::JS(paste0("
+        function(settings, json) {
+          var filterElement = document.getElementById('filter-note-table');
+          if (filterElement) {
+            filterElement.innerHTML = '", gsub("'", "\\'", filter_description), "';
+          }
+        }
+      "))
+    ),
     rownames = FALSE
 )
 
 
 output$vertabUI = renderUI({
   req(vertab())
-  div(style = "background-color: white; padding: 10px; ", DTOutput('vertab'))
+  div(
+    style = "background-color: white; padding: 10px;",
+    div(
+      class = "filter-note",
+      HTML('<strong>Filters:</strong> <span id="filter-note-table">Loading...</span>')
+    ),
+    DTOutput('vertab')
+  )
 })

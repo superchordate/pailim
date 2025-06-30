@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() { Highcharts.setOptions
         thousandsSep: ','
     },
     chart: {
-        style: {fontSize: '10pt', fontFamily: 'Open Sans', height: 'auto' },
+        style: {fontSize: '10pt', fontFamily: 'Source Sans Pro', height: 'auto' },
     },
     // https://personal.sron.nl/~pault/#sec:qualitative
     colors: ['#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF', '#44BB99', '#BBCC33', '#AAAA00', '#DDDDDD'],
@@ -12,21 +12,21 @@ document.addEventListener('DOMContentLoaded', function() { Highcharts.setOptions
     subtitle: {align: 'left'}, 
     legend: {
         verticalAlign: 'top', align: 'left', enabled: false, 
-        itemStyle: {fontSize: '1.2em', fontFamily: 'Open Sans'}, 
+        itemStyle: {fontSize: '1.2em', fontFamily: 'Source Sans Pro'}, 
         padding: 0, margin: 0, itemMarginBottom: 50, itemMarginTop: 0
     }, // we only show legend when grouping.
     exporting: {enabled: false},
     xAxis: {
         startOnTick: true, endOnTick: true,
         lineWidth: 0, tickWidth: 0, gridLineWidth: 1, 
-        labels: {style: {fontFamily: 'Open Sans', fontSize: '1.2em'}},
-        title: {enabled: true, text: 'Values', style: {fontFamily: 'Open Sans', fontSize: '1.4em'}},
+        labels: {style: {fontFamily: 'Source Sans Pro', fontSize: '1.2em'}},
+        title: {enabled: true, text: 'Values', style: {fontFamily: 'Source Sans Pro', fontSize: '1.4em'}},
         margin: 5
     },
     yAxis: {
         startOnTick: true, endOnTick: true,
-        labels: {enabled: true, style: {fontFamily: 'Open Sans', fontSize: '1.2em'}}, 
-        title: {enabled: true, text: 'Values', style: {fontFamily: 'Open Sans', fontSize: '1.4em'}},
+        labels: {enabled: true, style: {fontFamily: 'Source Sans Pro', fontSize: '1.2em'}}, 
+        title: {enabled: true, text: 'Values', style: {fontFamily: 'Source Sans Pro', fontSize: '1.4em'}},
     },
     tooltip: {style: {fontSize: '1.2em'}, useHTML: true},
     plotOptions: {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() { Highcharts.setOptions
               style: {
                 textOutline: 'none',
                 fontSize: '2.5em',
-                fontFamily: 'Open Sans',
+                fontFamily: 'Source Sans Pro',
                 letterSpacing: '1px',
                 color: '#404040'
              }

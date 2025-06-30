@@ -226,7 +226,12 @@ output$lineplot = renderUI({
 
   # Base options for Highcharts
   chart_options = list(
-    chart = list(type = 'line'),
+    chart = list(
+      type = 'line',
+      events = list(
+        load = hc_markjs(paste0("function() { var filterElement = document.getElementById('filter-note-line'); if (filterElement) { filterElement.innerHTML = '", filter_description, "'; }}"))
+      )
+    ),
     title = list(text = ''),
     yAxis = list(
       list(

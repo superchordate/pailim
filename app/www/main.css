@@ -1,0 +1,21 @@
+/* Map loading animation */
+@keyframes spin { 
+  0% { transform: rotate(0deg); } 
+  100% { transform: rotate(360deg); } 
+}
+
+/* Filter note styling */
+.filter-note {
+  background-color: #f8f9fa;
+  border-left: 4px solid #007bff;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #495057;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filter-note strong {
+  color: #007bff;
+}

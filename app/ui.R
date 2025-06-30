@@ -39,11 +39,11 @@ ui = dashboardPage(
     )  ),
   dashboardBody(
 
-    # Javascript imports. 
+    # Javascript and CSS imports. 
     tags$head(
       tags$script(src = "highcharts.js"),
       tags$script(src = "highcharts-defaults.js"),
-      HTML('<style id="map-loading-styles">@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>'),
+      tags$link(rel = "stylesheet", type = "text/css", href = "main.css")
     ),
 
     # Downloads.
@@ -67,21 +67,28 @@ ui = dashboardPage(
     tabItems(
       tabItem(
         tabName = "Maps",
-        HTML('
-            <div style="position: absolute; top: 300px; left: calc(50% - 50px); text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-              <div class="spinner" style="
-                border: 3px solid #e9ecef;
-                border-top: 3px solid #007bff;
-                border-radius: 50%;
-                width: 32px;
-                height: 32px;
-                animation: spin 1s linear infinite;
-                margin: 0 auto 12px auto;
-              "></div>
-              <div style="font-size: 14px; color: #495057; font-weight: 500;">Loading map...</div>
-          </div>'),
-        p("Note: GPS coordinates are generally accurate to the town or village level."),
-        leafletOutput("mymap",height=600),
+        div(
+          style = "background-color: white; padding: 10px; ",
+          HTML('
+              <div style="position: absolute; top: 300px; left: calc(50% - 50px); text-align: center; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <div class="spinner" style="
+                  border: 3px solid #e9ecef;
+                  border-top: 3px solid #007bff;
+                  border-radius: 50%;
+                  width: 32px;
+                  height: 32px;
+                  animation: spin 1s linear infinite;
+                  margin: 0 auto 12px auto;
+                "></div>
+                <div style="font-size: 14px; color: #495057; font-weight: 500;">Loading map...</div>
+            </div>'),
+          p("Note: GPS coordinates are generally accurate to the town or village level."),
+          div(
+            class = "filter-note",
+            HTML('<strong>Filters:</strong> <span id="filter-note-map">Loading...</span>')
+          ),
+          leafletOutput("mymap",height=600)
+        ),
         br(),
         uiOutput('vertabUI')
       ),
@@ -94,7 +101,14 @@ ui = dashboardPage(
             selectInput('colorBy','Color by',choices=NULL)
           ),
           selectInput('selectedCovariates', 'Add Covariates', choices = NULL),
-          uiOutput("lineplot", height = 400)
+          div(
+            style = "background-color: white; padding: 10px; ",
+            div(
+              class = "filter-note",
+              HTML('<strong>Filters:</strong> <span id="filter-note-line">Loading...</span>')
+            ),
+            uiOutput("lineplot", height = 400)
+          )
         )
       )
     )

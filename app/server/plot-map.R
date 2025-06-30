@@ -103,7 +103,17 @@ output$mymap = renderLeaflet({
     
   }
 
-  p %>% setView(lng = 34.7818, lat = 32.0853, zoom = 7) # set the center of the map
+  p %>% 
+    setView(lng = 34.7818, lat = 32.0853, zoom = 7) %>%
+    htmlwidgets::onRender(paste0("
+      function(el, x) {
+        // Update filter note after map renders
+        var filterElement = document.getElementById('filter-note-map');
+        if (filterElement) {
+          filterElement.innerHTML = '", gsub("'", "\\'", filter_description), "';
+        }
+      }
+    "))
 })
 
 
