@@ -145,7 +145,14 @@ dataPlot = reactive({
     
     # Grouping/coloring columns used in line plots
     "Perpetrator.Type", "Region", "City", "Victim.Type",
-    "Riot.SubCategory"
+    "Riot.SubCategory",
+    
+    # Covariate columns needed for line plot covariates
+    "Total.Imports.Gaza.Israel", "Total.Exports.Gaza.Israel",
+    "Israeli.CPI", "Palestinian.CPI", "Israeli.UE.Quarterly", "Palestinian.UE.Quarterly",
+    "Israeli.Trade.Balance", "Palestinian.Trade.Balance", "Exchange.Rate",
+    "Demolished.Structures.Daily", "TA125.PX_CLOSE", "PASISI.PX_CLOSE",
+    "TAVG", "PRCP", "Total.Entries.Exits.Gaza.Israel"
   )
   
   # Only keep columns that exist in the data and are needed
