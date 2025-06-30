@@ -248,7 +248,7 @@ covariate_data = reactive({
 
 })
 
-output$lineplot = renderUI({
+output$chartplot = renderUI({
   
   req(mainplot_data())
   
@@ -403,7 +403,7 @@ output$lineplot = renderUI({
   
   # Create the chart HTML with a div container
   return(
-    hc_html('lineplot', chart_options)
+    hc_html('chartplot', chart_options)
   )
 })
 

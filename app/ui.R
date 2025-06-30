@@ -107,7 +107,7 @@ ui = dashboardPage(
               class = "filter-note",
               HTML('<strong>Filters:</strong> <span id="filter-note-line">Loading...</span>')
             ),
-            uiOutput("lineplot", height = 400)
+            uiOutput("chartplot", height = 400)
           )
         )
       )
