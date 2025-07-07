@@ -45,8 +45,6 @@ mainplot_data = reactive({
       d$District
     } else if(xAxis == 'Region') {
       d$Region
-    } else if(xAxis == 'Area') {
-      d$Area
     } else if(xAxis == 'City') {
       d$City
     } else if(xAxis == 'Perpetrator Origin' && actor == 'Palestinian Actions') {
@@ -188,8 +186,6 @@ covariate_data = reactive({
       d$District
     } else if(xAxis == 'Region') {
       d$Region
-    } else if(xAxis == 'Area') {
-      d$Area
     } else if(xAxis == 'City') {
       d$City
     } else if(xAxis == 'Type of Action') {
@@ -304,7 +300,6 @@ output$chartplot = renderUI({
     `Week` = 'Year_Week',
     `District` = 'District',
     `Region` = 'Region',
-    `Area` = 'Area',
     `City` = 'City',
     `Type of Action` = 'Type of Action',
     `Perpetrator Origin` = 'Perpetrator Origin',

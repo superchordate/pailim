@@ -145,7 +145,7 @@ dataPlot = reactive({
     "Type of Action", "Verbatim.Report",
     
     # Grouping/coloring columns used in line plots
-    "Perpetrator Type", "Region", "City", "Victim.Type", "Perpetrator Origin", "District", "Area",
+    "Perpetrator Type", "Region", "City", "Victim.Type", "Perpetrator Origin", "District", 
     "Riot.SubCategory",
     
     # Covariate columns needed for line plot covariates

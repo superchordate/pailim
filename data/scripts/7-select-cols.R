@@ -7,7 +7,7 @@
         "Add", "Year", "Month", "Date", "Week", "MonthNum", "Quarter",
         
         # Geographic columns  
-        "Longitude", "Latitude", "District", "Region", "Area", "City",
+        "Longitude", "Latitude", "District", "Region", "City",
         
         # Casualty data
         "Casualties", "Killed", "Injured",
@@ -44,7 +44,7 @@
     
     # Israeli-specific columns used in filtering/coloring  
     il_specific_cols = c(
-        "Perpetrator Type", "Area", "City",
+        "Perpetrator Type", "City",
         "Detained.Arrested", "Victim.Type"
     )
     

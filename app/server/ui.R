@@ -36,7 +36,7 @@ observeEvent(
     } else if (input$actor=='Palestinian Actions'){
       color_choices = c('None', 'Type of Action', 'Perpetrator Origin', 'Region', "District")
     } else if (input$actor=='Israeli Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator Type', "Area", 'City')
+      color_choices = c('None', 'Type of Action', 'Perpetrator Type', 'City')
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){

@@ -51,7 +51,7 @@ These datasets share many common variables while maintaining distinct characteri
 - **Temporal casualty analysis** with same binning and filtering options as events
 - **Location-based filtering**: 
   - Palestinian violence: Region, City.1-.8
-  - Israeli violence: Area, Governorate, Town
+  - Israeli violence: Governorate, Town
 
 #### 7. Detention Trends
 - **Arrest/detention patterns** over time with temporal and geographic filtering
@@ -97,7 +97,7 @@ Add vertical lines for specific events:
 Both datasets share key variables enabling comparative analysis:
 - Case identification and validation (Case.ID, Coder.ID, Cross.Validator.ID)
 - Temporal data (Year, Month, Day)
-- Geographic information (Region, Area, City variations)
+- Geographic information (Region, City variations)
 - Violence classification and outcomes
 - Casualty data (Injured, Killed, Casualties)
 
