@@ -132,7 +132,7 @@ mainplot_data = reactive({
   # Apply grouping and summing.
   d %<>% 
     group_by(across(all_of(group_cols))) %>% 
-    summarise(across(all_of(sum_cols), sum, na.rm = TRUE), .groups = 'drop')
+    summarise(across(all_of(sum_cols), \(x) sum(x, na.rm = TRUE)), .groups = 'drop')
 
   # Pivot wider on group columns that are not X, to prep these for plotting.
   if(length(setdiff(group_cols, 'X')) > 0){
