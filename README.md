@@ -51,7 +51,7 @@ These datasets share many common variables while maintaining distinct characteri
 - **Temporal casualty analysis** with same binning and filtering options as events
 - **Location-based filtering**: 
   - Palestinian violence: Region, City.1-.8
-  - Israeli violence: Governorate, Town
+  - Israeli violence: Governorate, Town (relabed to City)
 
 #### 7. Detention Trends
 - **Arrest/detention patterns** over time with temporal and geographic filtering

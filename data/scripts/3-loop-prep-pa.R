@@ -15,12 +15,13 @@ if (!cache.ok(3)) {
                     CaseNum = d[['CaseNum']],
                     X.1 = d[[x_col]],
                     Y.1 = d[[y_col]],
+                    City = d[['City']],
                     Add = 1
                 )
                 
                 stmp[[j]] <- bind_cols(
                     stmp[[j]], 
-                    d %>% select(-CaseNum, -X.1, -Y.1, -Add)
+                    d %>% select(-CaseNum, -X.1, -Y.1, -City, -Add)
                 )
             }
         }

@@ -1,7 +1,4 @@
 if (!cache.ok(4)) {
-
-  # some fixes to match prior format.
-  il %<>% rename(City = District)
   
   # for each record, for each additional location, we create a new row setting the additional x/y as X.1, Y.1.
   tmp2 <- list()
@@ -13,7 +10,8 @@ if (!cache.ok(4)) {
       select(
         CaseNum,
         X.1 = !!sym(paste0('X.', i)), 
-        Y.1 = !!sym(paste0('Y.', i))
+        Y.1 = !!sym(paste0('Y.', i)),
+        City = !!sym(paste0('Town.', i)),
       ) %>%
       mutate(
         Add = 1 # indicate this record has been added.
@@ -29,7 +27,7 @@ if (!cache.ok(4)) {
     # add this data to the running list. 
     tmp2[[i]] <- bind_cols(
       idt[!is.na(idt$X.1), ],
-      il[!is.na(idt$X.1), ] %>% select(-CaseNum, -X.1, -Y.1, -Add)
+      il[!is.na(idt$X.1), ] %>% select(-CaseNum, -X.1, -Y.1, -City, -Add)
     )
     
   }

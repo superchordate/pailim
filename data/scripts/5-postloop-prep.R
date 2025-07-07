@@ -91,12 +91,12 @@ if(!cache.ok(5)){
         pa %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report,Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel,Victim.Type,`Palestine/Israel`,
-            `Type of Action`
+            `Type of Action`, City
         ),
         il %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report, Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel, Victim.Type,`Palestine/Israel`,
-            `Type of Action`
+            `Type of Action`, City
         )
     )
     cm$`Palestine/Israel` = factor(cm$`Palestine/Israel`)
@@ -104,7 +104,7 @@ if(!cache.ok(5)){
     # ===== FILTER DATA =====
     # Start from 2010 and remove empty cities for Israel data
     pa <- pa %>% filter(Year >= 2010)
-    il <- il %>% filter(Year >= 2010, City != "")
+    il <- il %>% filter(Year >= 2010) #, City != "")
     cm <- cm %>% filter(Year >= 2010)
 
     # Uncomment to sample Israel data if needed
