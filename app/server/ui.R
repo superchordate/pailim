@@ -95,14 +95,14 @@ observeEvent(
 # Update X-Axis choices based on actor selection
 observeEvent(input$actor, {
 
-  time_choices = c('Year','Month','Quarter','Week')
+  time_choices = c('Year', 'Month', 'Quarter', 'Week')
 
   if(input$actor == 'Palestinian Actions') {
-    updated_choices = c(time_choices, 'District', 'Region', 'Type of Action', 'Perpetrator Origin')
+    updated_choices = c(time_choices, 'District', 'Region', 'City', 'Type of Action', 'Perpetrator Origin')
   } else if(input$actor == 'Israeli Actions') {
-    updated_choices = c(time_choices, 'Area', 'City', 'Type of Action', 'Perpetrator Type')
+    updated_choices = c(time_choices, 'District', 'City', 'Type of Action', 'Perpetrator Type')
   } else {
-    updated_choices = c(time_choices, 'Type of Action')
+    updated_choices = c(time_choices, 'District', 'City', 'Type of Action')
   }
   
   updateSelectInput(session, 'xAxis',
