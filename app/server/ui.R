@@ -144,12 +144,13 @@ output$dynamic_inputs = renderUI({
             `select-all-text` = "All"
           )),
 
-        pickerInput('City','City',choices=sort(na.omit(unique(d()$City))),selected=na.omit(unique(d()$City)),multiple=TRUE,
-                    options = list(
-                      `actions-box` = TRUE,
-                      `deselect-all-text` = "None",
-                      `select-all-text` = "All"
-                    )),
+        # There are too many cities to include in a picker. 
+        # pickerInput('City','City',choices=sort(na.omit(unique(d()$City))),selected=na.omit(unique(d()$City)),multiple=TRUE,
+        #             options = list(
+        #               `actions-box` = TRUE,
+        #               `deselect-all-text` = "None",
+        #               `select-all-text` = "All"
+        #             )),
 
         pickerInput('District','District',choices=sort(na.omit(unique(d()$District))),selected=na.omit(unique(d()$District)),multiple=TRUE,
                     options = list(
