@@ -83,20 +83,20 @@ if(!cache.ok(5)){
             stringr::str_remove_all("U00..")
     }
 
-    pa %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report))
-    il %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report))
+    pa %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City))
+    il %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City))
 
     # ===== COMBINE DATASETS =====
     cm = bind_rows(
         pa %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report,Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel,Victim.Type,`Palestine/Israel`,
-            `Type of Action`, City
+            `Type of Action`, City, District
         ),
         il %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report, Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel, Victim.Type,`Palestine/Israel`,
-            `Type of Action`, City
+            `Type of Action`, City, District
         )
     )
     cm$`Palestine/Israel` = factor(cm$`Palestine/Israel`)

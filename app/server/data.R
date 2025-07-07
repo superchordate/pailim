@@ -68,6 +68,19 @@ dataPlot = reactive({
       filter_parts = c(filter_parts, format_generic_filter(input$selectedActionTypes, "Action Types", display_threshold))
   }
 
+  # Filters that apply to both. 
+  if(length(input$City) > 0) {
+    d %<>% filter(City %in% input$City) 
+    # Cities filter description
+    filter_parts = c(filter_parts, format_generic_filter(input$City, "Cities", display_threshold))
+  }
+
+  if(length(input$District) > 0) {
+    d %<>% filter(District %in% input$District) 
+    # Districts filter description
+    filter_parts = c(filter_parts, format_generic_filter(input$District, "Districts", display_threshold))
+  }
+
   # Inputs specific to Palestinian data.
   if(input$actor=='Palestinian Actions'){
 
@@ -89,11 +102,6 @@ dataPlot = reactive({
       d %<>% filter(`Perpetrator Type` %in% input$perpetrator.type)
       # Perpetrator type filter description
       filter_parts = c(filter_parts, format_generic_filter(input$perpetrator.type, "Perpetrator Type", display_threshold))
-    }
-    if(length(input$gover) > 0) {
-      d %<>% filter(City %in% input$gover) 
-      # Cities filter description
-      filter_parts = c(filter_parts, format_generic_filter(input$gover, "Cities", display_threshold))
     }
     
   }
