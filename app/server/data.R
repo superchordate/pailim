@@ -19,8 +19,6 @@ d = reactive({
 dataPlot = reactive({
   
   req(d())
-  req(length(input$year)>0)
-  req(length(input$month)>0)
   req(input$chooseData)
   req(input$casualtyType)
   
