@@ -14,23 +14,42 @@ try {
 
   // Update the service
   console.log('🔄 Updating service...');
-  execSync('gcloud run services update rshiny --image us-docker.pkg.dev/pailim-dataset/docker/rshiny:latest --timeout=1800', { stdio: 'inherit' }); // 1800 = 30 minutes
+  execSync(`gcloud run services update rshiny ` +
+    `--image us-docker.pkg.dev/pailim-dataset/docker/rshiny:latest ` +
+    `--timeout=1800 ` +
+    `--concurrency=1000 ` +
+    `--min-instances=0 ` +
+    `--max-instances=3`, { stdio: 'inherit' }); // 30 min timeout, 1000 concurrent requests per instance, 0-3 instances
 
   // Delete all existing containers except :latest
   console.log('🗑️ Deleting old containers (keeping :latest)...');
   try {
-    // Get list of all images and delete everything except :latest
-    const listCommand = 'gcloud artifacts docker images list us-docker.pkg.dev/pailim-dataset/docker/rshiny --format="value(IMAGE)" --filter="NOT tags:latest"';
-    const imagesToDelete = execSync(listCommand, { encoding: 'utf8' }).trim();
+    // Get list of all images with their tags
+    const listCommand = 'gcloud artifacts docker images list us-docker.pkg.dev/pailim-dataset/docker/rshiny --format="value(IMAGE,TAGS)"';
+    const imageList = execSync(listCommand, { encoding: 'utf8' }).trim();
     
-    if (imagesToDelete) {
-      const images = imagesToDelete.split('\n').filter(img => img.trim());
-      for (const image of images) {
-        execSync(`gcloud artifacts docker images delete ${image.trim()} --quiet`, { stdio: 'inherit' });
+    if (imageList) {
+      const lines = imageList.split('\n').filter(line => line.trim());
+      const imagesToDelete = [];
+      
+      for (const line of lines) {
+        const [image, tags] = line.split('\t');
+        // Only delete images that don't have the 'latest' tag
+        if (tags && !tags.includes('latest')) {
+          imagesToDelete.push(image.trim());
+        }
       }
-      console.log('✅ Old containers deleted successfully');
+      
+      if (imagesToDelete.length > 0) {
+        for (const image of imagesToDelete) {
+          execSync(`gcloud artifacts docker images delete ${image} --quiet`, { stdio: 'inherit' });
+        }
+        console.log(`✅ Deleted ${imagesToDelete.length} old containers (kept :latest)`);
+      } else {
+        console.log('ℹ️  No old containers found to delete (keeping :latest)');
+      }
     } else {
-      console.log('ℹ️  No old containers found to delete');
+      console.log('ℹ️  No containers found in repository');
     }
   } catch (error) {
     console.log('ℹ️  Error cleaning up old containers, continuing deployment...');

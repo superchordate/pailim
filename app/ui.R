@@ -43,7 +43,11 @@ ui = dashboardPage(
     tags$head(
       tags$script(src = "highcharts.js"),
       tags$script(src = "highcharts-defaults.js"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "main.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "main.css"),
+      # Disable browser caching which can cause issues. 
+      # tags$meta(`http-equiv` = "Cache-Control", content = "no-cache, no-store, must-revalidate"),
+      # tags$meta(`http-equiv` = "Pragma", content = "no-cache"),
+      # tags$meta(`http-equiv` = "Expires", content = "0")
     ),
 
     # Downloads.
