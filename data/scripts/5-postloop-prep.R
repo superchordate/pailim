@@ -32,7 +32,7 @@ if(!cache.ok(5)){
                 'Multiple Types',
                 Riot.SubCategory.1
             ),
-            Riot.SubCategory = fcase(
+            `Riot Subcategory` = fcase(
                 Riot.SubCategory == 'Border/Blockage Breaching', 'Border/Blockade Breaching',
                 Riot.SubCategory == 'Stones Incendiary', 'Stones and Incendiary',
                 Riot.SubCategory == 'Stone', 'Stones',

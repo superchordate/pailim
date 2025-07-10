@@ -45,7 +45,7 @@
     # Palestinian-specific columns used in filtering/coloring
     pa_specific_cols = c(
         "Perpetrator Origin", "Region", 
-        "Rocket.Number", "Balloon.Number", "Riot.SubCategory",
+        "Rocket.Number", "Balloon.Number", "Riot Subcategory",
         "Victim.Type"
     )
     

@@ -115,8 +115,8 @@ output$dynamic_inputs = renderUI({
     conditionalPanel(
       condition="input.chooseData=='Riots'",
       pickerInput('riot.sub','Riot Subcategories',
-                  choices=sort(na.omit(unique(d()$Riot.SubCategory))),
-                  selected=na.omit(unique(d()$Riot.SubCategory)),multiple=TRUE,
+                  choices=sort(na.omit(unique(d()$`Riot Subcategory`))),
+                  selected=na.omit(unique(d()$`Riot Subcategory`)),multiple=TRUE,
                   options = list(
                     `actions-box` = TRUE,
                     `deselect-all-text` = "None",

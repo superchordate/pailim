@@ -125,7 +125,7 @@ mainplot_data = reactive({
   if(chooseData=='Riots' & actor=='Palestinian Actions'){    
     d %<>% filter(
       str_detect(d$`Type of Action`, "\\bRiot\\b"),
-      Riot.SubCategory %in% riot.sub
+      `Riot Subcategory` %in% riot.sub
     )
   }
 

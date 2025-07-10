@@ -136,7 +136,7 @@ dataPlot = reactive({
   } else if(input$chooseData == 'Riots') {
     d = d %>% filter(
       str_detect(`Type of Action`, "\\bRiot\\b"),
-      Riot.SubCategory %in% input$riot.sub
+      `Riot Subcategory` %in% input$riot.sub
     )
     # Riots filter description
     if(!is.null(input$riot.sub) && length(input$riot.sub) > 0) {
@@ -161,7 +161,7 @@ dataPlot = reactive({
     
     # Grouping/coloring columns used in line plots
     "Perpetrator Type", "Region", "City", "Victim.Type", "Perpetrator Origin", "District", 
-    "Riot.SubCategory",
+    "Riot Subcategory",
     
     # Covariate columns needed for line plot covariates
     "Total.Imports.Gaza.Israel", "Total.Exports.Gaza.Israel",
