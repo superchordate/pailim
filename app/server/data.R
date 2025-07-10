@@ -112,6 +112,15 @@ dataPlot = reactive({
   }
   filter_parts = c(filter_parts, paste("Data:", data_desc))
   
+  # For map tab, if unsupported data type is selected, return empty data
+  if(exists('input') && !is.null(input$tab) && input$tab == 'Maps' && 
+     input$chooseData %in% c('Rockets', 'Incendiary Balloons')) {
+    # Return empty data frame but maintain structure
+    d = d[0, ]
+    filter_description <<- paste(filter_parts, collapse = " | ")
+    return(d)
+  }
+  
   if(input$chooseData=='Casualties' & input$casualtyType=='All'){
     d = d %>% filter(Casualties > 0)      
   } else if(input$chooseData=='Casualties' & input$casualtyType=='Killed'){

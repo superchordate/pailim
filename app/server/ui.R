@@ -4,18 +4,20 @@ observeEvent(input$resetAll, {
 
 # update graph choice based on selected actions
 observeEvent(input$actor,{
+
+# available plot types for selected actions
+  chooseData_both = c('Events', 'Casualties')
   
   if(input$actor=='Both'){
     updated_choices = chooseData_both
   } else if (input$actor=='Palestinian Actions'){
-    updated_choices = chooseData_pa
+    updated_choices = c(chooseData_both, 'Rockets', 'Incendiary Balloons','Riots')
   } else if (input$actor=='Israeli Actions'){
-    updated_choices = chooseData_il
+    updated_choices = c(chooseData_both, 'Detentions')
   }
   
-  updateSelectInput(session,'chooseData',
-                    choices=updated_choices,
-                    selected='Events')
+  updateSelectInput(session, 'chooseData', choices = sort(updated_choices), selected = 'Events')
+
 })
 
 # this is to update color_by option for main line graphs

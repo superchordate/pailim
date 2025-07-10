@@ -24,8 +24,3 @@ countries = iconList(
 )
 
 months = c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
-
-# available plot types for selected actions
-chooseData_both = sort(c('Events', 'Casualties'))
-chooseData_pa = sort(c('Events', 'Casualties','Rockets','Incendiary Balloons','Riots'))
-chooseData_il = sort(c('Events', 'Casualties', 'Detentions'))

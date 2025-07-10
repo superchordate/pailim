@@ -6,6 +6,11 @@ output$mymap = renderLeaflet({
   req(d())
   req(dataPlot())
   
+  # Don't render map for data types that are not supported
+  if(input$chooseData %in% c('Rockets', 'Incendiary Balloons')) {
+    return(NULL)
+  }
+  
   d = dataPlot()
   
   # check if we are in the middle of an options change, to prevent loading the map twice.  
@@ -72,25 +77,25 @@ output$mymap = renderLeaflet({
     ) -> p
   }
   
-  else if(input$chooseData=='Rockets'){
+  # else if(input$chooseData=='Rockets'){
     
-    leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
-      lng=~Longitude,lat=~Latitude,
-      icon = ~countries[`Palestine/Israel`],
-      popup = ~as.character(Rocket.Number), label = ~as.character(Rocket.Number),
-      clusterOptions = markerClusterOptions()
-    ) -> p
-  }
+  #   leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
+  #     lng=~Longitude,lat=~Latitude,
+  #     icon = ~countries[`Palestine/Israel`],
+  #     popup = ~as.character(Rocket.Number), label = ~as.character(Rocket.Number),
+  #     clusterOptions = markerClusterOptions()
+  #   ) -> p
+  # }
   
-  else if(input$chooseData=='Incendiary Balloons'){
+  # else if(input$chooseData=='Incendiary Balloons'){
     
-    leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
-      lng=~Longitude,lat=~Latitude,
-      icon = ~countries[`Palestine/Israel`],
-      popup = ~as.character(Balloon.Number), label = ~as.character(Balloon.Number),
-      clusterOptions = markerClusterOptions()
-    ) -> p
-  }
+  #   leaflet(data = d) %>% addProviderTiles(providers$Stadia.StamenTonerLite,options = providerTileOptions(noWrap = TRUE)) %>%  addMarkers(
+  #     lng=~Longitude,lat=~Latitude,
+  #     icon = ~countries[`Palestine/Israel`],
+  #     popup = ~as.character(Balloon.Number), label = ~as.character(Balloon.Number),
+  #     clusterOptions = markerClusterOptions()
+  #   ) -> p
+  # }
   
   else if(input$chooseData=='Riots'){
 
