@@ -121,22 +121,27 @@ ui = dashboardPage(
       tabItem(
         tabName = "Charts",
         div(
-          selectInput('xAxis','X-Axis',choices=sort(c('Year','Month','Quarter','Week'))),
+          style = "display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;",
+          div(
+            selectInput('xAxis','X-Axis',choices=sort(c('Year','Month','Quarter','Week')))
+          ),
           conditionalPanel(
             condition="input.chooseData=='Casualties' | input.chooseData=='Events' | input.chooseData=='Riots'",
             selectInput('colorBy', 'Color By',choices=NULL)
           ),
-          selectInput('selectedCovariates', 'Add Covariates', choices = NULL),
           div(
-            style = "background-color: white; padding: 10px; overflow-x: auto; ",
-            div(
-              class = "filter-note",
-              HTML('<strong>Filters:</strong> <span id="filter-note-line">Loading...</span>')
-            ),
-            div(
-              class = "chart-container",
-              uiOutput("chartplot", height = 400)
-            )
+            selectInput('selectedCovariates', 'Add Covariates', choices = NULL)
+          )
+        ),
+        div(
+          style = "background-color: white; padding: 10px; overflow-x: auto; ",
+          div(
+            class = "filter-note",
+            HTML('<strong>Filters:</strong> <span id="filter-note-line">Loading...</span>')
+          ),
+          div(
+            class = "chart-container",
+            uiOutput("chartplot", height = 400)
           )
         )
       )
