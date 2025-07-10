@@ -16,7 +16,7 @@ This project is a web application built with R Shiny.
 
 ## Project Organization
 
-
+- A sample from the raw data is at docs/raw-data.md.
 
 ## Styling
 
