@@ -32,24 +32,27 @@ observeEvent(
     req(input$actor)
     req(input$chooseData)
     req(input$casualtyType)
+
+    color_choices_all =  c('None', 'Type of Action', "District")
     
     if(input$actor=='Both'){
-      color_choices = c('None', 'Palestine/Israel', 'Type of Action', "District")
+      color_choices = c(color_choices_all, "Palestine/Israel")
     } else if (input$actor=='Palestinian Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator Origin', 'Region', "District")
+
+      color_choices = c(color_choices_all, 'Perpetrator Origin', 'Region')
+
     } else if (input$actor=='Israeli Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator Type', "District")
+
+      color_choices = c(color_choices_all, 'Perpetrator Type')
+    }
+
+    if(input$chooseData == 'Casualties' && input$casualtyType == 'All'){
+      color_choices = c(color_choices, 'Casualty Type')
+    } else if(input$chooseData == 'Riots'){
+      color_choices = c(color_choices, 'Riot Subcategories')
     }
     
-    if(input$chooseData=='Casualties'& input$casualtyType=='All'){
-      color_choices=c(color_choices,'Casualty Type')
-    } else {
-      color_choices
-    }
-    
-    updateSelectInput(session,'colorBy',
-                      choices=color_choices,
-                      selected='None')
+    updateSelectInput(session, 'colorBy', choices = color_choices, selected = 'None')
   })
 
 
@@ -115,8 +118,8 @@ output$dynamic_inputs = renderUI({
     conditionalPanel(
       condition="input.chooseData=='Riots'",
       pickerInput('riot.sub','Riot Subcategories',
-                  choices=sort(na.omit(unique(d()$`Riot Subcategory`))),
-                  selected=na.omit(unique(d()$`Riot Subcategory`)),multiple=TRUE,
+                  choices=sort(na.omit(unique(d()$`Riot Subcategories`))),
+                  selected=na.omit(unique(d()$`Riot Subcategories`)),multiple=TRUE,
                   options = list(
                     `actions-box` = TRUE,
                     `deselect-all-text` = "None",
