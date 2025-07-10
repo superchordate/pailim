@@ -49,7 +49,7 @@ observeEvent(
     if(input$chooseData == 'Casualties' && input$casualtyType == 'All'){
       color_choices = c(color_choices, 'Casualty Type')
     } else if(input$chooseData == 'Riots'){
-      color_choices = c(color_choices, 'Riot Subcategories')
+      color_choices = c(color_choices, 'Riot Subcategories') %>% setdiff('Type of Action')
     }
     
     updateSelectInput(session, 'colorBy', choices = color_choices, selected = 'None')

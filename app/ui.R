@@ -123,8 +123,8 @@ ui = dashboardPage(
         div(
           selectInput('xAxis','X-Axis',choices=sort(c('Year','Month','Quarter','Week'))),
           conditionalPanel(
-            condition="input.chooseData=='Casualties'|input.chooseData=='Events'",
-            selectInput('colorBy','Color by',choices=NULL)
+            condition="input.chooseData=='Casualties' | input.chooseData=='Events' | input.chooseData=='Riots'",
+            selectInput('colorBy', 'Color By',choices=NULL)
           ),
           selectInput('selectedCovariates', 'Add Covariates', choices = NULL),
           div(
