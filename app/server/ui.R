@@ -50,6 +50,8 @@ observeEvent(
       color_choices = c(color_choices, 'Casualty Type')
     } else if(input$chooseData == 'Riots'){
       color_choices = c(color_choices, 'Riot Subcategories') %>% setdiff('Type of Action')
+    } else if(input$chooseData == 'Rockets' || input$chooseData == 'Incendiary Balloons'){
+      color_choices = color_choices %>% setdiff('Type of Action')
     }
     
     updateSelectInput(session, 'colorBy', choices = color_choices, selected = 'None')
@@ -88,12 +90,18 @@ observeEvent(
       updated_choices = 'None'
     }
     
-    updateSelectInput(session,'selectedCovariates',
-                      choices=updated_choices,
-                      selected='None')
+    updateSelectInput(
+      session,
+      'selectedCovariates',
+      choices=updated_choices,
+      selected='None'
+    )
   })
 # Update X-Axis choices based on actor selection
-observeEvent(input$actor, {
+observeEvent({
+  input$actor
+  input$chooseData
+}, {
 
   time_choices = c('Year', 'Month', 'Quarter', 'Week')
 
@@ -105,9 +113,18 @@ observeEvent(input$actor, {
     updated_choices = c(time_choices, 'District', 'City', 'Type of Action')
   }
   
-  updateSelectInput(session, 'xAxis',
-                    choices = updated_choices,
-                    selected = if(input$xAxis %in% updated_choices) input$xAxis else 'Year')
+  # Remove Type of Action for specific data types
+  if(input$chooseData == 'Riots' || input$chooseData == 'Rockets' || input$chooseData == 'Incendiary Balloons') {
+    updated_choices = updated_choices %>% setdiff('Type of Action')
+  }
+  
+  updateSelectInput(
+    session, 
+    'xAxis', 
+    choices = updated_choices, 
+    selected = if(input$xAxis %in% updated_choices) input$xAxis else 'Year'
+  )
+
 })
 
 # general dropdowns on sidebar
@@ -132,17 +149,20 @@ output$dynamic_inputs = renderUI({
       )
     ),
     
-    
-        pickerInput(
-          'selectedActionTypes', 'Type of Action',
-          choices = options$`Type of Action: cm`,
-          selected = options$`Type of Action: cm`, 
-          multiple = TRUE,
-          options = list(
-            `actions-box` = TRUE,
-            `deselect-all-text` = "None",
-            `select-all-text` = "All"
-          )),
+    # Hide Type of Action input for specific data types
+    conditionalPanel(
+      condition="input.chooseData!='Riots' && input.chooseData!='Rockets' && input.chooseData!='Incendiary Balloons'",
+      pickerInput(
+        'selectedActionTypes', 'Type of Action',
+        choices = options$`Type of Action: cm`,
+        selected = options$`Type of Action: cm`, 
+        multiple = TRUE,
+        options = list(
+          `actions-box` = TRUE,
+          `deselect-all-text` = "None",
+          `select-all-text` = "All"
+        ))
+    ),
 
         # There are too many cities to include in a picker. 
         # pickerInput('City','City',choices=sort(na.omit(unique(d()$City))),selected=na.omit(unique(d()$City)),multiple=TRUE,
