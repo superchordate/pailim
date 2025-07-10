@@ -32,11 +32,11 @@ observeEvent(
     req(input$casualtyType)
     
     if(input$actor=='Both'){
-      color_choices = c('None', 'Palestine/Israel', 'Type of Action', "District", "City")
+      color_choices = c('None', 'Palestine/Israel', 'Type of Action', "District")
     } else if (input$actor=='Palestinian Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator Origin', 'Region', "District", 'City')
+      color_choices = c('None', 'Type of Action', 'Perpetrator Origin', 'Region', "District")
     } else if (input$actor=='Israeli Actions'){
-      color_choices = c('None', 'Type of Action', 'Perpetrator Type', "District", 'City')
+      color_choices = c('None', 'Type of Action', 'Perpetrator Type', "District")
     }
     
     if(input$chooseData=='Casualties'& input$casualtyType=='All'){
@@ -57,32 +57,27 @@ observeEvent(
     input$actor
     input$xAxis
   },{
-    #req(input$tab=="lines")
     
-    "
-  Consumer Price Index, Unemployment, Trade Balance, Home Demolitions by Israel, Rainfall, 
-  Temperature, Stock Market Index, Israel-Gaza Crossing (People), Israel-Gaza Crossing (Goods)
-  "
-    
-    updated_choices=NULL
+    updated_choices = NULL
     
     if(input$actor=='Both' | input$actor=='Palestinian Actions' | input$actor=='Israeli Actions'){
+      # Base covariates available for most time periods
+      base_covariates = c('None','Exchange Rate','Home Demolitions by Israel','Rainfall',
+                         'Stock Market Index','Temperature','Settler Population','Number of Outposts',
+                         'Palestinian Population','Average Daily Wage','Crime','Labor Participation')
+      
       if (input$xAxis=='Quarter'){
-            updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
-                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
-                          'Stock Market Index','Temperature','Trade Balance','Unemployment')
+            updated_choices = c(base_covariates, 'Consumer Price Index','Israel-Gaza Crossing (Goods)',
+                               'Israel-Gaza Crossing (People)','Trade Balance','Unemployment')
       } else if (input$xAxis=='Month'){
-            updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
-                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
-                          'Stock Market Index','Temperature','Trade Balance')
+            updated_choices = c(base_covariates, 'Consumer Price Index','Israel-Gaza Crossing (Goods)',
+                               'Israel-Gaza Crossing (People)','Trade Balance','Unemployment')
       } else if (input$xAxis=='Week'){
-            updated_choices = c('None','Exchange Rate','Hamas-Fatah Reconciliation Talks','Home Demolitions by Israel',
-                          'Israeli Coalition Size','Israeli Operation','Rainfall','Stock Market Index',
-                          'Temperature','UN Vote','US-Israel State Visits')
+            updated_choices = c(base_covariates, 'Hamas-Fatah Reconciliation Talks','Israeli Coalition Size',
+                               'Israeli Operation','UN Vote','US-Israel State Visits')
       } else {
-            updated_choices = c('None','Consumer Price Index','Exchange Rate','Home Demolitions by Israel',
-                          'Israel-Gaza Crossing (Goods)','Israel-Gaza Crossing (People)','Rainfall',
-                          'Stock Market Index','Temperature','Trade Balance','Unemployment')
+            updated_choices = c(base_covariates, 'Consumer Price Index','Israel-Gaza Crossing (Goods)',
+                               'Israel-Gaza Crossing (People)','Trade Balance','Unemployment')
       }
     } else if (input$actor=='Both') {
       updated_choices = 'None'
