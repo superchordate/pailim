@@ -7,7 +7,7 @@
         "Add", "Year", "Month", "Date", "Week", "MonthNum", "Quarter",
         
         # Geographic columns  
-        "Longitude", "Latitude", "District", "Region", "City",
+        "Longitude", "Latitude", "District", "City",
         
         # Casualty data
         "Casualties", "Killed", "Injured",
@@ -32,19 +32,26 @@
         "TA125.PX_CLOSE", "PASISI.PX_CLOSE",
         "TAVG", "PRCP", 
         "Total.Entries.Exits.Gaza.Israel", 
-        "Total.Imports.Gaza.Israel", "Total.Exports.Gaza.Israel"
+        "Total.Imports.Gaza.Israel", "Total.Exports.Gaza.Israel",
+        # New geographic-varying covariates.
+        "Settler.Population",
+        "N.Outposts",
+        "Palestinian.Population",
+        "Avg.Daily.Wage",
+        "Crime",
+        "Labor.Participation"
     )
     
     # Palestinian-specific columns used in filtering/coloring
     pa_specific_cols = c(
-        "Perpetrator Type", "Perpetrator Origin", "Region", 
+        "Perpetrator Origin", "Region", 
         "Rocket.Number", "Balloon.Number", "Riot.SubCategory",
         "Victim.Type"
     )
     
     # Israeli-specific columns used in filtering/coloring  
     il_specific_cols = c(
-        "Perpetrator Type", "City",
+        "Perpetrator Type", 
         "Detained.Arrested", "Victim.Type"
     )
     
@@ -53,12 +60,22 @@
     il_cols = c(core_cols, covariate_cols, il_specific_cols)
     cm_cols = c(core_cols, covariate_cols, "Victim.Type")
     
-    # Filter to only existing columns to avoid errors
-    pa_cols = intersect(pa_cols, colnames(pa))
-    il_cols = intersect(il_cols, colnames(il))  
-    cm_cols = intersect(cm_cols, colnames(cm))
+    # Check for missing columns and error out if any are not found
+    missing_pa_cols = setdiff(pa_cols, colnames(pa))
+    missing_il_cols = setdiff(il_cols, colnames(il))
+    missing_cm_cols = setdiff(cm_cols, colnames(cm))
     
-    # Apply column selection
+    if(length(missing_pa_cols) > 0) {
+        stop(paste("Missing columns in PA dataset:", paste(missing_pa_cols, collapse = ", ")))
+    }
+    if(length(missing_il_cols) > 0) {
+        stop(paste("Missing columns in IL dataset:", paste(missing_il_cols, collapse = ", ")))
+    }
+    if(length(missing_cm_cols) > 0) {
+        stop(paste("Missing columns in CM dataset:", paste(missing_cm_cols, collapse = ", ")))
+    }
+    
+    # Apply column selection (now that we've confirmed all columns exist)
     pa = pa %>% select(all_of(pa_cols))
     il = il %>% select(all_of(il_cols))
     cm = cm %>% select(all_of(cm_cols))

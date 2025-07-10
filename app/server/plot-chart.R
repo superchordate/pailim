@@ -212,8 +212,12 @@ covariate_data = reactive({
     'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
     'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
     'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
-    'Goods'
+    'Goods', 'Settler.Population', 'N.Outposts', 'Palestinian.Population',
+    'Avg.Daily.Wage', 'Crime', 'Labor.Participation'
   )
+  
+  # Only use columns that actually exist in the data
+  agg_cols = intersect(agg_cols, colnames(d))
   
   if(is_time_based) {
     # For time-based charts, group by time period
@@ -239,7 +243,13 @@ covariate_data = reactive({
     `Temperature` = list(Y = 'TAVG'),
     `Rainfall` = list(Y = 'PRCP'),
     `Israel-Gaza Crossing (People)` = list(Y = 'Total.Entries.Exits.Gaza.Israel'),
-    `Israel-Gaza Crossing (Goods)` = list(Y = 'Goods')
+    `Israel-Gaza Crossing (Goods)` = list(Y = 'Goods'),
+    `Settler Population` = list(Y = 'Settler.Population'),
+    `Number of Outposts` = list(Y = 'N.Outposts'),
+    `Palestinian Population` = list(Y = 'Palestinian.Population'),
+    `Average Daily Wage` = list(Y = 'Avg.Daily.Wage'),
+    `Crime` = list(Y = 'Crime'),
+    `Labor Participation` = list(Y = 'Labor.Participation')
   )[[selectedCovariates]]
 
   # Return just the columns the user has selected.

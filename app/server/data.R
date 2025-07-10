@@ -159,7 +159,9 @@ dataPlot = reactive({
     "Israeli.CPI", "Palestinian.CPI", "Israeli.UE.Quarterly", "Palestinian.UE.Quarterly",
     "Israeli.Trade.Balance", "Palestinian.Trade.Balance", "Exchange.Rate",
     "Demolished.Structures.Daily", "TA125.PX_CLOSE", "PASISI.PX_CLOSE",
-    "TAVG", "PRCP", "Total.Entries.Exits.Gaza.Israel"
+    "TAVG", "PRCP", "Total.Entries.Exits.Gaza.Israel",
+    "Settler.Population", "N.Outposts", "Palestinian.Population",
+    "Avg.Daily.Wage", "Crime", "Labor.Participation"
   )
   
   # Only keep columns that exist in the data and are needed
