@@ -80,8 +80,34 @@
     il = il %>% select(all_of(il_cols))
     cm = cm %>% select(all_of(cm_cols))
     
+    # Fill NA values with "Missing" for character columns that are used in filtering
+    # This prevents records from being dropped when all choices are selected
+    fill_na_columns = c("District", "City", "Region", "Perpetrator Origin", "Perpetrator Type", "Victim.Type")
+    
+    # Apply to PA dataset
+    for(col in intersect(fill_na_columns, colnames(pa))) {
+        if(is.character(pa[[col]]) || is.factor(pa[[col]])) {
+            pa[[col]] = ifelse(is.na(pa[[col]]), "Missing", as.character(pa[[col]]))
+        }
+    }
+    
+    # Apply to IL dataset
+    for(col in intersect(fill_na_columns, colnames(il))) {
+        if(is.character(il[[col]]) || is.factor(il[[col]])) {
+            il[[col]] = ifelse(is.na(il[[col]]), "Missing", as.character(il[[col]]))
+        }
+    }
+    
+    # Apply to CM dataset
+    for(col in intersect(fill_na_columns, colnames(cm))) {
+        if(is.character(cm[[col]]) || is.factor(cm[[col]])) {
+            cm[[col]] = ifelse(is.na(cm[[col]]), "Missing", as.character(cm[[col]]))
+        }
+    }
+    
     # Print summary of column reduction
     cat("Column reduction summary:\n")
     cat("PA dataset: reduced to", ncol(pa), "columns\n")
     cat("IL dataset: reduced to", ncol(il), "columns\n") 
     cat("CM dataset: reduced to", ncol(cm), "columns\n")
+    cat("NA values filled with 'Missing' for filtering columns\n")
