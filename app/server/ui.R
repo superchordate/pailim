@@ -27,6 +27,7 @@ observeEvent(
     input$chooseData
     input$casualtyType
     input$actor
+    input$xAxis
   },{
 
     req(input$actor)
@@ -53,8 +54,12 @@ observeEvent(
     } else if(input$chooseData == 'Rockets' || input$chooseData == 'Incendiary Balloons'){
       color_choices = color_choices %>% setdiff('Type of Action')
     }
+
+    # Don't allow color by = xAxis.
+    color_choices %<>% setdiff(input$xAxis)
     
     updateSelectInput(session, 'colorBy', choices = color_choices, selected = 'None')
+
   })
 
 
@@ -65,38 +70,54 @@ observeEvent(
     input$xAxis
   },{
     
-    updated_choices = NULL
+    covariate_choices = c()
     
-    if(input$actor=='Both' | input$actor=='Palestinian Actions' | input$actor=='Israeli Actions'){
-      # Base covariates available for most time periods
-      base_covariates = c('None','Exchange Rate','Home Demolitions by Israel','Rainfall',
-                         'Stock Market Index','Temperature','Settler Population','Number of Outposts',
-                         'Palestinian Population','Average Daily Wage','Crime','Labor Participation')
+    # time-based covariates.
+    if(input$xAxis %in% c('Year', 'Month', 'Quarter', 'Week')){
       
-      if (input$xAxis=='Quarter'){
-            updated_choices = c(base_covariates, 'Consumer Price Index','Israel-Gaza Crossing (Goods)',
-                               'Israel-Gaza Crossing (People)','Trade Balance','Unemployment')
-      } else if (input$xAxis=='Month'){
-            updated_choices = c(base_covariates, 'Consumer Price Index','Israel-Gaza Crossing (Goods)',
-                               'Israel-Gaza Crossing (People)','Trade Balance','Unemployment')
-      } else if (input$xAxis=='Week'){
-            updated_choices = c(base_covariates, 'Hamas-Fatah Reconciliation Talks','Israeli Coalition Size',
-                               'Israeli Operation','UN Vote','US-Israel State Visits')
+      covariate_choices %<>% c(
+        'Exchange Rate', 'Home Demolitions by Israel', 'Rainfall',
+        'Stock Market Index', 'Temperature', 'Settler Population', 'Number of Outposts',
+        'Palestinian Population', 'Average Daily Wage', 'Crime', 'Labor Participation'
+      )
+
+      if (input$xAxis == 'Week'){
+        
+        covariate_choices %<>% c(
+          'Hamas-Fatah Reconciliation Talks', 'Israeli Coalition Size',
+          'Israeli Operation', 'UN Vote', 'US-Israel State Visits'
+        )
+
       } else {
-            updated_choices = c(base_covariates, 'Consumer Price Index','Israel-Gaza Crossing (Goods)',
-                               'Israel-Gaza Crossing (People)','Trade Balance','Unemployment')
+
+        covariate_choices %<>% c(
+          'Consumer Price Index', 'Israel-Gaza Crossing (Goods)',
+          'Israel-Gaza Crossing (People)', 'Trade Balance', 'Unemployment'
+        )
+
       }
-    } else if (input$actor=='Both') {
-      updated_choices = 'None'
+
+    }
+
+    # geographic covariates.
+    if(input$xAxis == "District"){
+
+      # We can take these options directly from the data. 
+      covariate_choices = c(
+          "Settler.Population", "N.Outposts", "Palestinian.Population",
+          "Avg.Daily.Wage", "Crime", "Labor.Participation"
+      )
+
     }
     
     updateSelectInput(
       session,
       'selectedCovariates',
-      choices=updated_choices,
-      selected='None'
+      choices = c('None', covariate_choices),
+      selected = 'None'
     )
   })
+
 # Update X-Axis choices based on actor selection
 observeEvent({
   input$actor

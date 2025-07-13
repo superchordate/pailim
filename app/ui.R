@@ -1,10 +1,12 @@
+show_map = TRUE # set to FALSE to only show charts for faster chart debugging.
+
 ui = dashboardPage(
   dashboardHeader(title = "PA'ILIM Dataset"),
   dashboardSidebar(
     useShinyjs(),
     sidebarMenu(
       id='tab',
-      menuItem(
+      if(show_map) menuItem(
         "Maps", 
         tabName = "Maps", 
         icon = icon("globe")

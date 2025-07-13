@@ -147,122 +147,6 @@ mainplot_data = reactive({
 
 })
 
-# covariate plot
-covariate_data = reactive({
-  
-  if(is.null(input$selectedCovariates) || input$selectedCovariates == 'None') {
-    return(NULL)
-  }
-
-  # Extract input values. 
-  selectedCovariates = input$selectedCovariates
-  xAxis = input$xAxis
-  
-  # Filter to original records, exclude rows added to represent additional locations within a single record.
-  d = dataPlot() %>% filter(Add == 0)
-
-  # Determine if this is a time-based or geographical chart
-  is_time_based = xAxis %in% c('Year', 'Month', 'Quarter', 'Week')
-
-  if(is_time_based) {
-    # Set up the time periods for time-based charts
-    d$X = if(xAxis == 'Year') {
-      d$Year
-    } else if(xAxis == 'Month') {
-      paste0(d$Year, '_', pad0(d$MonthNum, 2))
-    } else if(xAxis == 'Quarter') {
-      paste0(d$Year, '_', d$Quarter)
-    } else if(xAxis == 'Week') {
-      paste0(d$Year, '_', pad0(d$Week, 2))
-    } else {
-      stop(glue("covariate_data: Unhandled case for xAxis: {xAxis}"))
-    }
-  } else {
-    # For geographical charts, we need to group by both geography and date to get daily averages
-    # Use the existing Date column
-    
-    # Set up the geographical grouping
-    d$X = if(xAxis == 'District') {
-      d$District
-    } else if(xAxis == 'Region') {
-      d$Region
-    } else if(xAxis == 'City') {
-      d$City
-    } else if(xAxis == 'Type of Action') {
-      d$`Type of Action`
-    } else if(xAxis == 'Perpetrator Origin') {
-      d$`Perpetrator Origin`
-    } else if(xAxis == 'Perpetrator Type') {
-      d$`Perpetrator Type`
-    } else {
-      stop(glue("covariate_data: Unhandled geographical case for xAxis: {xAxis}"))
-    }
-  }
-
-  # Calculate Goods.
-  d %<>% mutate(Goods = Total.Imports.Gaza.Israel / Total.Exports.Gaza.Israel)
-  d$Goods[is.infinite(d$Goods)] <- NA
-
-  # Convert to data.table for faster grouped operations
-  setDT(d)
-  
-  # Define columns to aggregate
-  agg_cols = c(
-    'Israeli.CPI', 'Palestinian.CPI', 'Israeli.UE.Quarterly', 'Palestinian.UE.Quarterly',
-    'Israeli.Trade.Balance', 'Palestinian.Trade.Balance', 'Exchange.Rate',
-    'Demolished.Structures.Daily', 'TA125.PX_CLOSE', 'PASISI.PX_CLOSE',
-    'TAVG', 'PRCP', 'Total.Entries.Exits.Gaza.Israel',
-    'Goods', 'Settler.Population', 'N.Outposts', 'Palestinian.Population',
-    'Avg.Daily.Wage', 'Crime', 'Labor.Participation'
-  )
-  
-  # Only use columns that actually exist in the data
-  agg_cols = intersect(agg_cols, colnames(d))
-  
-  if(is_time_based) {
-    # For time-based charts, group by time period
-    d = d[, lapply(.SD, mean, na.rm = TRUE), by = X, .SDcols = agg_cols]
-  } else {
-    # For geographical charts, first group by Date and X to get daily averages per location,
-    # then group by X to get overall averages per location
-    d = d[, lapply(.SD, mean, na.rm = TRUE), by = .(Date, X), .SDcols = agg_cols]
-    d = d[, lapply(.SD, mean, na.rm = TRUE), by = X, .SDcols = agg_cols]
-  }
-  
-  # Convert back to data.frame for compatibility with rest of code
-  d = as.data.frame(d)
-
-  # Select Z and Y.
-  covariate_selection = list(
-    `Consumer Price Index` = list(Z = 'Israeli.CPI', Y = 'Palestinian.CPI'),
-    `Unemployment` = list(Z = 'Israeli.UE.Quarterly', Y = 'Palestinian.UE.Quarterly'),
-    `Trade Balance` = list(Z = 'Israeli.Trade.Balance', Y = 'Palestinian.Trade.Balance'),
-    `Exchange Rate` = list(Y = 'Exchange.Rate'),
-    `Home Demolitions by Israel` = list(Y = 'Demolished.Structures.Daily'),
-    `Stock Market Index` = list(Z = 'TA125.PX_CLOSE', Y = 'PASISI.PX_CLOSE'),
-    `Temperature` = list(Y = 'TAVG'),
-    `Rainfall` = list(Y = 'PRCP'),
-    `Israel-Gaza Crossing (People)` = list(Y = 'Total.Entries.Exits.Gaza.Israel'),
-    `Israel-Gaza Crossing (Goods)` = list(Y = 'Goods'),
-    `Settler Population` = list(Y = 'Settler.Population'),
-    `Number of Outposts` = list(Y = 'N.Outposts'),
-    `Palestinian Population` = list(Y = 'Palestinian.Population'),
-    `Average Daily Wage` = list(Y = 'Avg.Daily.Wage'),
-    `Crime` = list(Y = 'Crime'),
-    `Labor Participation` = list(Y = 'Labor.Participation')
-  )[[selectedCovariates]]
-
-  # Return just the columns the user has selected.
-  get_cols = if(!is.null(covariate_selection$Z)){
-    c('X', covariate_selection$Y, covariate_selection$Z)
-  } else {
-    c('X', covariate_selection$Y)
-  } 
-
-  return(d[, get_cols])
-
-})
-
 output$chartplot = renderUI({
   
   req(mainplot_data())
@@ -285,19 +169,25 @@ output$chartplot = renderUI({
     
     # join covariate data.
     if(!is.null(covariate_data())){
+
       covariate_cols = setdiff(colnames(covariate_data()), "X")
       d = left_join(d, covariate_data(), by = "X")
+
     } else {
       covariate_cols = c()
     }
+
   } else {
+
     # For geographical charts, remove rows with missing X values and join covariate data
     d = d %>% filter(!is.na(X) & X != "")
     
     # join covariate data for geographical charts
     if(!is.null(covariate_data())){
+      
       covariate_cols = setdiff(colnames(covariate_data()), "X")
-      d = left_join(d, covariate_data(), by = "X")
+      d = left_join(d, covariate_data(), by = "X")   
+      
     } else {
       covariate_cols = c()
     }
@@ -371,6 +261,7 @@ output$chartplot = renderUI({
   
   # Add the applicable series. This will include everything that is not X. 
   for(col in setdiff(colnames(d), "X")){
+
     series_data = if(is_time_based) {
       d[[col]]
     } else {
@@ -392,8 +283,11 @@ output$chartplot = renderUI({
     )
     
     # Add stack property for non-covariate series in column charts when Color By is selected
+    #if(col == "Settler.Population") browser()
     if(chart_type == 'column' && !is_covariate && colorBy != 'None') {
       series_config$stack = 'main'
+    } else if(is_covariate){
+      series_config$stack = 'covariates'
     }
     
     chart_options$series[[length(chart_options$series) + 1]] = series_config

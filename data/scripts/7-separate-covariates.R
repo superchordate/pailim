@@ -29,34 +29,47 @@ all_covariates = c(time_varying_covariates, geographic_varying_covariates)
 # Use unique combinations of temporal columns with covariates
 time_covariates_raw = cm %>% 
     select(
-        Year, MonthNum, Quarter, Week, Date, 
+        Year, Month, MonthNum, Quarter, Week, Date, 
         all_of(time_varying_covariates)
     )
 
 # Handle duplicates by taking the mean across duplicates (removing NAs)
-time_covariates = as.data.table(time_covariates_raw)[, lapply(.SD, function(x) {
-    mean(x, na.rm = TRUE)
-}), by = Date, .SDcols = c("Year", "MonthNum", "Quarter", "Week", time_varying_covariates)]
-setorder(time_covariates, Date)
+time_covariates = time_covariates_raw %>%
+    group_by(Year, Month, MonthNum, Quarter, Week, Date) %>% # we need Month for filtering and MonthNum for labels.
+    summarise(
+        across(all_of(time_varying_covariates), ~ mean(.x, na.rm = TRUE)),
+        .groups = "drop"
+    ) %>%
+    arrange(Date)
 
 # Create geographic-varying covariates dataset  
 # Use unique combinations of geographic and temporal columns with covariates
 geo_covariates_raw = cm %>%
     select(
-        Year, MonthNum, Quarter, Week, Date, 
+        Year, Month, MonthNum, Quarter, Week, Date, 
         District, 
         all_of(geographic_varying_covariates)
     )
 
 # Handle duplicates by taking the mean across duplicates (removing NAs)
-geo_covariates = as.data.table(geo_covariates_raw)[, lapply(.SD, function(x) {
-    mean(x, na.rm = TRUE)
-}), by = .(Date, District), .SDcols = c("Year", "MonthNum", "Quarter", "Week", geographic_varying_covariates)]
-setorder(geo_covariates, Date, District)
+geo_covariates = geo_covariates_raw %>%
+    group_by(Year, Month, MonthNum, Quarter, Week, Date, District) %>%
+    summarise(
+        across(all_of(geographic_varying_covariates), ~ mean(.x, na.rm = TRUE)),
+        .groups = "drop"
+    ) %>%
+    arrange(Date, District)
+
+# Convert NaN to NA for both datasets (only for numeric columns)
+time_covariates = time_covariates %>%
+    mutate(across(where(is.numeric), ~ ifelse(is.nan(.x), NA, .x)))
+
+geo_covariates = geo_covariates %>%
+    mutate(across(where(is.numeric), ~ ifelse(is.nan(.x), NA, .x)))
 
 # Change to tibbles since they are easier to use that data.tables.
-time_covariates %<>% tibble()
-geo_covariates %<>% tibble()
+# time_covariates %<>% tibble()
+# geo_covariates %<>% tibble()
 
 # Housekeeping.
 rm(time_covariates_raw, geo_covariates_raw)
