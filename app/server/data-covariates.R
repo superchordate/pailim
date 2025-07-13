@@ -1,3 +1,20 @@
+time_covariates_filtered = reactive({
+    time_covariates %>%
+        filter(
+            Year %in% input$year, 
+            Month %in% input$month
+        )
+})
+
+geo_covariates_filtered = reactive({
+    geo_covariates %>%
+        filter(
+            Year %in% input$year, 
+            Month %in% input$month,
+            District %in% input$District
+        )
+})
+
 # This function handles calculation of covariate metrics in the Chart tab. 
 # It returns covariate data at the same X-value level as the main plot data, so it can be joined easily.
 covariate_data = reactive({
