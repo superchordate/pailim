@@ -5,7 +5,6 @@ if(!cache.ok(5)){
     pa %<>% 
         mutate(
             `Palestine/Israel` = 'Palestine',
-            Month = factor(Month, levels = 1:12, labels = month.abb),
             `Perpetrator Origin` = fifelse(
                 !is.na(Perpetrator.Origin.2) | !is.na(Perpetrator.Origin.3),
                 'Multiple Perpetrators',
@@ -44,7 +43,6 @@ if(!cache.ok(5)){
     # ===== ISRAEL DATA PREPARATION =====
     il %<>%
         mutate(
-            Month = factor(Month, levels = 1:12, labels = month.abb),
             `Palestine/Israel` = 'Israel',
             `Perpetrator Type` = fifelse(!is.na(Perpetrator.2), 'Multiple Perpetrators', Perpetrator.1),
             Victim.Type = fifelse(
@@ -66,8 +64,9 @@ if(!cache.ok(5)){
     add_date_variables <- function(df) {
         df %>%
             mutate(
-                Date = as.Date(as.character(Date), format = "%Y%m%d"),
+                Date = lubridate::ymd(as.character(Date)),
                 MonthNum = lubridate::month(Date),
+                Month = factor(MonthNum, levels = 1:12, labels = month.abb),
                 Week = lubridate::week(Date),
                 Quarter = lubridate::quarter(Date)
             )
@@ -85,6 +84,24 @@ if(!cache.ok(5)){
 
     pa %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City))
     il %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City))
+    
+    # Fill NA values with "Missing" for character columns that are used in filtering
+    # This prevents records from being dropped when all choices are selected
+    fill_na_columns = c("District", "City", "Region", "Perpetrator Origin", "Perpetrator Type", "Victim.Type")
+    
+    # Apply to PA dataset
+    for(col in intersect(fill_na_columns, colnames(pa))) {
+        if(is.character(pa[[col]]) || is.factor(pa[[col]])) {
+            pa[[col]] = ifelse(is.na(pa[[col]]), "(Missing)", as.character(pa[[col]]))
+        }
+    }
+    
+    # Apply to IL dataset
+    for(col in intersect(fill_na_columns, colnames(il))) {
+        if(is.character(il[[col]]) || is.factor(il[[col]])) {
+            il[[col]] = ifelse(is.na(il[[col]]), "(Missing)", as.character(il[[col]]))
+        }
+    }
 
     # ===== COMBINE DATASETS =====
     cm = bind_rows(

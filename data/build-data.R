@@ -31,4 +31,4 @@ all_periods = list(
 )
 
 #save(list = c('pa', 'il', 'cm', 'options'), file = '../app/data.RData')
-qs_savem(cm, il, pa, options, all_periods, file = "../app/data.qs2")
+qs_savem(cm, il, pa, options, all_periods, time_covariates, geo_covariates, file = "../app/data.qs2")
