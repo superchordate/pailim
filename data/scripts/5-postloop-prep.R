@@ -44,7 +44,7 @@ if(!cache.ok(5)){
     il %<>%
         mutate(
             `Palestine/Israel` = 'Israel',
-            `Perpetrator Type` = fifelse(!is.na(Perpetrator.2), 'Multiple Perpetrators', Perpetrator.1),
+            `Perpetrator Type` = fifelse(!is.na(Perpetrator.2), 'Multiple', Perpetrator.1),
             Victim.Type = fifelse(
                 !is.na(Victim.2) | !is.na(Victim.3) | !is.na(Victim.4),
                 'Multiple Victims',
