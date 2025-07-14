@@ -127,11 +127,11 @@ observeEvent({
   time_choices = c('Year', 'Month', 'Quarter', 'Week')
 
   if(input$actor == 'Palestinian Actions') {
-    updated_choices = c(time_choices, 'District', 'Region', 'City', 'Type of Action', 'Perpetrator Origin')
+    updated_choices = c(time_choices, 'District', 'Region', 'Type of Action', 'Perpetrator Origin')
   } else if(input$actor == 'Israeli Actions') {
-    updated_choices = c(time_choices, 'District', 'City', 'Type of Action', 'Perpetrator Type')
+    updated_choices = c(time_choices, 'District', 'Type of Action', 'Perpetrator Type')
   } else {
-    updated_choices = c(time_choices, 'District', 'City', 'Type of Action')
+    updated_choices = c(time_choices, 'District', 'Type of Action')
   }
   
   # Remove Type of Action for specific data types
