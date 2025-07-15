@@ -34,6 +34,8 @@
   font-size: 14px;
 }
 
+.dataTables_scrollHead, .dataTables_scrollHeadInner, .dataTables_scrollBody, table.dataTable   { width: 100% !important; }
+
 .dataTables_wrapper .dataTables_scrollBody {
   max-height: 400px !important;
 }
