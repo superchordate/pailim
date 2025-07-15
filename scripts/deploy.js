@@ -18,6 +18,7 @@ try {
     `--image us-docker.pkg.dev/pailim-dataset/docker/rshiny:latest ` +
     `--timeout=1800 ` +
     `--concurrency=1000 ` +
+    `--session-affinity ` + // vs --no-session-affinity
     `--min-instances=0 ` +
     `--max-instances=3`, { stdio: 'inherit' }); // 30 min timeout, 1000 concurrent requests per instance, 0-3 instances
 
