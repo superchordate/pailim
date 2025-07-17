@@ -1,6 +1,8 @@
-# this is the map
-map_available_actions = '' # save server-level object for immediate checking of status. 
+# This file contains the code for the map.
+
+map_available_actions = '' # save a server-level object for immediate checking of status. 
 map_init = FALSE
+
 output$mymap = renderLeaflet({
   
   req(d())

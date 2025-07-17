@@ -1,3 +1,5 @@
+# This file contains dynamic UI code that must run first to prevent errors in the published app. 
+
 # type of action choices.
 
 available_actions = '' # save server-level object for immediate checking of status. 

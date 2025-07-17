@@ -1,3 +1,5 @@
+# This file contains code related to filtering and preparing the covariates data for plotting.
+
 time_covariates_filtered = reactive({
     time_covariates %>%
         filter(

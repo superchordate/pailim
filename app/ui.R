@@ -116,8 +116,18 @@ ui = dashboardPage(
         ),
         br(),
         conditionalPanel(
-          condition = "input.chooseData != 'Rockets' && input.chooseData != 'Incendiary Balloons'",
-          uiOutput('vertabUI')
+          condition = "input.chooseData != 'Rockets' && input.chooseData != 'Incendiary Balloons'",          
+          div(
+            style = "background-color: white; padding: 10px; max-height: 100dvh; overflow-y: auto;",
+            div(
+              class = "filter-note",
+              HTML('<strong>Filters:</strong> <span id="filter-note-table">Loading...</span>')
+            ),
+            div(
+              class = "table-container",
+              DTOutput('vertab')
+            )
+          )
         )
       ),
       tabItem(

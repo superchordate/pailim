@@ -1,3 +1,6 @@
+# Highcharts is my project to make it easier to use Highcharts in R.
+# I've copied this code in from https://github.com/superchordate/hcslim/tree/master/R.
+
 # helpful function for performing tasks that are expected to always be necessary.
 hc_helper = function(options){
 

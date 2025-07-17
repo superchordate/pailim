@@ -1,9 +1,13 @@
-# get the boundaries of map to display the actions in text (on bottom)
+# This files contains the server-side logic for rendering the data table at the bottom of the map tab.
+
+# Data function for the table. 
+# Gets data based on the current map bounds and formats it for display in the table.
 vertab = reactive({
 
     req(!is.null(input$mymap_bounds))
 
     bounds = input$mymap_bounds
+
     d = dataPlot() %>% 
         select(
             Year, Month, 
@@ -36,6 +40,7 @@ vertab = reactive({
 
 })
 
+# Render the table in the UI.
 output$vertab = DT::renderDT(
     vertab(),
     filter = 'top',
@@ -73,18 +78,3 @@ output$vertab = DT::renderDT(
     rownames = FALSE
 )
 
-
-output$vertabUI = renderUI({
-  req(vertab())
-  div(
-    style = "background-color: white; padding: 10px; max-height: 100dvh; overflow-y: auto;",
-    div(
-      class = "filter-note",
-      HTML('<strong>Filters:</strong> <span id="filter-note-table">Loading...</span>')
-    ),
-    div(
-      class = "table-container",
-      DTOutput('vertab')
-    )
-  )
-})

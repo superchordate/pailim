@@ -1,4 +1,6 @@
-# Filter description string generation functions
+# This file contains some functions used for building the filter notes that show up in a few different places in the app. 
+# Search "filter-note" to find where these are used in the UI.
+# They are called by app/server/data-dataPlot-filter-strings.R to keep the strings aligned with the data. 
 
 # Generate year filter description string
 format_year_filter = function(selected_years, display_threshold = 5) {

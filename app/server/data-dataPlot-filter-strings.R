@@ -1,3 +1,6 @@
+# This file contains reactives used to select and filter data, and the create the filter description string.
+# See app/server/filter-strings.R for more filter description string details.
+
 filter_description = "Loading.."
 
 # update what data to be used for the map/line graph

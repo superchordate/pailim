@@ -1,3 +1,7 @@
+# This file contains the code for the plot on the charts tab.
+
+# Prep data for the plot. 
+# Covariates data is prepped at app\server\data-covariates.R.
 mainplot_data = reactive({
 
   req(input$actor)
@@ -147,6 +151,7 @@ mainplot_data = reactive({
 
 })
 
+# Build the chart plot.
 output$chartplot = renderUI({
   
   req(mainplot_data())
