@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "R Shiny web application for pailim dataset",
   "scripts": {
-    "deploy": "node scripts/deploy.js"
+    "deploy": "node admin/deploy.js"
   },
   "devDependencies": {
     "child_process": "^1.0.2"
