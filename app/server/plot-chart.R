@@ -278,7 +278,7 @@ output$chartplot = renderUI({
     series_config = list(
       name = col,
       data = series_data,
-      dashStyle = if(is_covariate) "Dot" else "Solid",
+      dashStyle = if(is_covariate) "ShortDot" else "Solid",
       yAxis = if(is_covariate) 1 else 0
     )
     

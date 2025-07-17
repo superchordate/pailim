@@ -10,7 +10,7 @@ geo_covariates_filtered = reactive({
     geo_covariates %>%
         filter(
             Year %in% input$year, 
-            Month %in% input$month,
+            #Month %in% input$month, # district covariates are not indexed by month. 
             District %in% input$District
         )
 })

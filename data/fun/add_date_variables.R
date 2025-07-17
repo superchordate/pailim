@@ -6,6 +6,7 @@ add_date_variables <- function(df) {
             MonthNum = lubridate::month(Date),
             Month = factor(MonthNum, levels = 1:12, labels = month.abb),
             Week = lubridate::week(Date),
-            Quarter = lubridate::quarter(Date)
+            Quarter = lubridate::quarter(Date),
+            Year = lubridate::year(Date)
         )
 }
