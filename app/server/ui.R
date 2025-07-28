@@ -77,8 +77,7 @@ observeEvent(
       
       covariate_choices %<>% c(
         'Exchange Rate', 'Home Demolitions by Israel', 'Rainfall',
-        'Stock Market Index', 'Temperature', 'Settler Population', 'Number of Outposts',
-        'Palestinian Population', 'Average Daily Wage', 'Crime', 'Labor Participation'
+        'Stock Market Index', 'Temperature'        
       )
 
       if (input$xAxis == 'Week'){
