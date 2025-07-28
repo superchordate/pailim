@@ -3,6 +3,7 @@ if(!cache.ok(5)){
 
     # ===== PALESTINE DATA PREPARATION =====
     pa %<>% 
+        add_type_of_action() %>%
         mutate(
             `Palestine/Israel` = 'Palestine',
             `Perpetrator Origin` = fifelse(
@@ -37,11 +38,14 @@ if(!cache.ok(5)){
                 Riot.SubCategory == 'Stone', 'Stones',
                 Riot.SubCategory == '', NA_character_,
                 default = Riot.SubCategory
-            )
-        )
+            ),
+            Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City)
+        ) %>%
+        add_date_variables()
 
     # ===== ISRAEL DATA PREPARATION =====
     il %<>%
+        add_type_of_action() %>%
         mutate(
             `Palestine/Israel` = 'Israel',
             `Perpetrator Type` = fifelse(!is.na(Perpetrator.2), 'Multiple', Perpetrator.1),
@@ -56,22 +60,10 @@ if(!cache.ok(5)){
                 Victim.Type == 'PCI', "Palestinian Citizen of Israel",
                 Victim.Type == 'Palestinian Child', "Palestinian Minor",
                 default = Victim.Type
-            )
+            ),
+            Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City)
         ) %>%
-        rename(`Type of Action` = Combined_Crimes)
-
-    pa <- add_date_variables(pa)
-    il <- add_date_variables(il)
-
-    # Reload and clean text data
-    clean_text <- function(text) {
-        text %>%
-            stringr::str_remove_all("[<>+]") %>%
-            stringr::str_remove_all("U00..")
-    }
-
-    pa %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City))
-    il %<>% mutate(Verbatim.Report = clean_text(Verbatim.Report), City = gsub("^'", "", City))
+        add_date_variables()
     
     # Fill NA values with "Missing" for character columns that are used in filtering
     # This prevents records from being dropped when all choices are selected
@@ -96,24 +88,26 @@ if(!cache.ok(5)){
         pa %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report,Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel,Victim.Type,`Palestine/Israel`,
-            `Type of Action`, City, District, 
-            Settler.Population,
-            N.Outposts,
+            `Type of Action`, 
+            City, District, 
+            Settler.Population = Settler.Population.Gov.Year,
+            N.Outposts = N.Outposts.Gov.Year,
             Palestinian.Population,
-            Avg.Daily.Wage,
-            Crime,
-            Labor.Participation
+            Avg.Daily.Wage = Daily.Wage.Gov.Year,
+            Crime = Total.Crimes.Gov.Year,
+            Labor.Participation = Labor.Partic.Gov.Year
         ),
         il %>% select(
             Add,Year,Month,Date,Week,MonthNum,Quarter,Longitude,Latitude,Casualties,Killed,Injured,Verbatim.Report, Israeli.CPI, Palestinian.CPI,Israeli.UE.Quarterly,Palestinian.UE.Quarterly,Israeli.Trade.Balance,Palestinian.Trade.Balance,Exchange.Rate,Demolished.Structures.Daily,TA125.PX_CLOSE,PASISI.PX_CLOSE,
             TAVG,PRCP,Total.Entries.Exits.Gaza.Israel, Total.Imports.Gaza.Israel, Total.Exports.Gaza.Israel, Victim.Type,`Palestine/Israel`,
-            `Type of Action`, City, District, 
-            Settler.Population,
-            N.Outposts,
+            `Type of Action`, 
+            City, District, 
+            Settler.Population = Settler.Population.Gov.Year,
+            N.Outposts = N.Outposts.Gov.Year,
             Palestinian.Population,
-            Avg.Daily.Wage,
-            Crime,
-            Labor.Participation
+            Avg.Daily.Wage = Daily.Wage.Gov.Year,
+            Crime = Total.Crimes.Gov.Year,
+            Labor.Participation = Labor.Partic.Gov.Year
         )
     )
     cm$`Palestine/Israel` = factor(cm$`Palestine/Israel`)
