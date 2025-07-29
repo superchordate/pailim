@@ -51,6 +51,6 @@ if (!cache.ok(4)) {
   
   il <- bind_rows(il, tmp2)
   
-  save.cache(il, pa)
+  save.cache(il, pa, time_covariates, geo_covariates)
 
 }

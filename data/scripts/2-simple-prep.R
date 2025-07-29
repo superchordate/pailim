@@ -25,6 +25,6 @@ if(!cache.ok(2)){
         filter(Longitude != 0, Latitude != 0) %>%
         mutate_if(is.factor, as.character)
 
-    save.cache(pa, il)
+    save.cache(pa, il, time_covariates, geo_covariates)
 
 }

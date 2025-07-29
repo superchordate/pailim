@@ -109,6 +109,6 @@ if(!cache.ok(5)){
     # Uncomment to sample Israel data if needed
     # il <- il %>% slice_sample(n = 4000) %>% arrange(Date)
 
-    save.cache(pa, il, cm)
+    save.cache(pa, il, cm, time_covariates, geo_covariates)
 
 }
