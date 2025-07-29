@@ -7,6 +7,8 @@ output$mymap = renderLeaflet({
   
   req(d())
   req(dataPlot())
+
+  input$tab # the map will break when revisiting the tab if this is not included.
   
   # Don't render map for data types that are not supported
   if(input$chooseData %in% c('Rockets', 'Incendiary Balloons')) {
