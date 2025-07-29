@@ -12,6 +12,9 @@ require(qs2)
 
 begin()
 
+# options
+use_cache = TRUE
+
 runfolder("scripts")
 
 # object the app can use. 

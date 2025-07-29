@@ -1,8 +1,8 @@
-cache.init(at.path = 'cache', caches = list(
+cache.init(at.path = 'cache', save.only = !use_cache, caches = list(
 
     list(
         name = 'raw-data',
-        depends.on = c('build-data.R', 'scripts/1-read-data.R', 'raw-data/')
+        depends.on = c('build-data.R', 'scripts/1-read-data.R', '../files')
     ),
 
     list(
